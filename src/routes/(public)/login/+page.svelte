@@ -1,3 +1,97 @@
+<script>
+    const { data } = $props();
+
+    let cpf = $state(data.username);
+    let senha = $state('');
+    let lembrarme = $state(false);
+
+    function formatCPF(value) {
+        // Remove tudo que não é número
+        value = value.replace(/\D/g, '');
+        
+        // Adiciona a formatação
+        if (value.length <= 11) {
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+        }
+        
+        return value;
+    }
+
+    function handleCPFInput(e) {
+        cpf = formatCPF(e.target.value);
+    }
+
+    function handleSubmit(event) {
+        event.preventDefault();
+        console.log('Login submitted:', { cpf, senha, lembrarme });
+        alert('Login realizado!\nCPF: ' + cpf);
+        // Aqui você adicionaria a lógica de autenticação
+    }
+</script>
+
+<div class="login-container">
+    <div class="login-card">
+        <div class="logo-section">
+        </div>
+
+        <form onsubmit={handleSubmit}>
+            <div class="form-group">
+                <label for="cpf">CPF</label>
+                <input
+                    type="text"
+                    id="cpf"
+                    bind:value={cpf}
+                    oninput={handleCPFInput}
+                    placeholder="Informe seu cpf"
+                    maxlength="14"
+                    required
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="senha">Senha</label>
+                <input
+                    type="password"
+                    id="senha"
+                    bind:value={senha}
+                    placeholder="Informe sua senha"
+                    required
+                />
+            </div>
+
+            <div class="options">
+                <label class="checkbox-label">
+                    <input type="checkbox" bind:checked={lembrarme} />
+                    <span>Lembrar-me</span>
+                </label>
+                <a href="/cadastro" class="forgot-password">Cadastre-se</a>
+            </div>
+
+            <button type="submit" class="btn-login">ENTRAR</button>
+        </form>
+
+        <footer>
+            © Fev 2025 - Todos os direitos reservados.
+        </footer>
+    </div>
+
+    <div class="animated-background">
+        <div class="grid-overlay"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="pulse-circle"></div>
+        <div class="pulse-circle"></div>
+        <div class="gradient-orb"></div>
+        <div class="gradient-orb"></div>
+        <div class="wave"></div>
+    </div>
+</div>
+
 <style>
     :global(body) {
         margin: 0;
@@ -415,94 +509,3 @@
         }
     }
 </style>
-
-<script>
-    let cpf = '';
-    let senha = '';
-    let lembrarme = false;
-
-    function formatCPF(value) {
-        // Remove tudo que não é número
-        value = value.replace(/\D/g, '');
-        
-        // Adiciona a formatação
-        if (value.length <= 11) {
-            value = value.replace(/(\d{3})(\d)/, '$1.$2');
-            value = value.replace(/(\d{3})(\d)/, '$1.$2');
-            value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-        }
-        
-        return value;
-    }
-
-    function handleCPFInput(e) {
-        cpf = formatCPF(e.target.value);
-    }
-
-    function handleSubmit() {
-        console.log('Login submitted:', { cpf, senha, lembrarme });
-        alert('Login realizado!\nCPF: ' + cpf);
-        // Aqui você adicionaria a lógica de autenticação
-    }
-</script>
-
-<div class="login-container">
-    <div class="login-card">
-        <div class="logo-section">
-        </div>
-
-        <form on:submit|preventDefault={handleSubmit}>
-            <div class="form-group">
-                <label for="cpf">CPF</label>
-                <input
-                    type="text"
-                    id="cpf"
-                    bind:value={cpf}
-                    on:input={handleCPFInput}
-                    placeholder="Informe seu cpf"
-                    maxlength="14"
-                    required
-                />
-            </div>
-
-            <div class="form-group">
-                <label for="senha">Senha</label>
-                <input
-                    type="password"
-                    id="senha"
-                    bind:value={senha}
-                    placeholder="Informe sua senha"
-                    required
-                />
-            </div>
-
-            <div class="options">
-                <label class="checkbox-label">
-                    <input type="checkbox" bind:checked={lembrarme} />
-                    <span>Lembrar-me</span>
-                </label>
-                <a href="/cadastro" class="forgot-password">Cadastre-se</a>
-            </div>
-
-            <button type="submit" class="btn-login">ENTRAR</button>
-        </form>
-
-        <footer>
-            © Fev 2025 - Todos os direitos reservados.
-        </footer>
-    </div>
-
-    <div class="animated-background">
-        <div class="grid-overlay"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="pulse-circle"></div>
-        <div class="pulse-circle"></div>
-        <div class="gradient-orb"></div>
-        <div class="gradient-orb"></div>
-        <div class="wave"></div>
-    </div>
-</div>

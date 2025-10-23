@@ -137,7 +137,7 @@
       </div>
   
       <div class="pricing-cards">
-        {#each plans as plan}
+        {#each plans as plan, index (index)}
           <div class="pricing-card" class:recommended={plan.recommended}>
             {#if plan.recommended}
               <span class="recommended-badge">Recomendado</span>
@@ -156,7 +156,7 @@
             </div>
   
             <ul class="features-list">
-              {#each plan.features as feature}
+              {#each plan.features as feature, index (index)}
                 <li>
                   <span class="feature-icon" class:check={feature.included} class:cross={!feature.included}>
                     {feature.included ? '✓' : '✗'}
@@ -182,7 +182,7 @@
       <div class="features-content">
         <h2>Por Que Escolher o DriveFlow?</h2>
         <div class="features-grid">
-          {#each features as feature}
+          {#each features as feature, index (index)}
             <div class="feature-item">
               <div class="feature-item-icon">{feature.icon}</div>
               <h3>{feature.title}</h3>
