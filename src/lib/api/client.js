@@ -35,6 +35,9 @@ export class ApiClient {
             const response = await fetch(url, config);
             
             if (!response.ok) {
+                if (response.status === 401) {
+                    throw new ApiError('Usuário não autenticado', response.status);
+                }
                 const errorData = await response.json().catch(() => null);
                 logger.error(`${method} ${url} - ${response.status}`, errorData);
                 

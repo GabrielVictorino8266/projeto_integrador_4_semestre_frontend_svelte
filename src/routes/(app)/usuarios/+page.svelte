@@ -8,9 +8,23 @@
 
     const { data } = $props();
 
+    let columns = $state([
+        { key: "id", label: "#", sortable: true },
+        { key: "nome", label: "Nome", sortable: true },
+        { key: "cpf", label: "CPF", sortable: true },
+        { key: "email", label: "Email", sortable: true },
+        { key: "telefone", label: "Telefone", sortable: true },
+        { key: "acoes", label: "Ações", sortable: false },
+    ]);
+
     let users = $state(data.users);
     let pagination = $state(data.pagination);
     let isLoading = $state(false);
+    
+    let sortState = $state({
+        key: "id",
+        direction: "asc",
+    });
 
     let searchState = {
         timeout: null,
@@ -18,8 +32,38 @@
         query: null,
     };
 
-    function sort(key) {
-        console.log(key);
+    async function sort(key) {
+        isLoading = true;
+        sortState.key = key;
+        sortState.direction = sortState.direction === "asc" ? "desc" : "asc";
+
+        try {
+            const params = new FormData();
+            params.append("page", pagination.currentPage);
+            params.append("size", 10);
+            params.append("sort", `${sortState.key},${sortState.direction}`);
+            params.append("nome", searchState.query || "");
+            params.append("email", searchState.query || "");
+            params.append("telefone", searchState.query || "");
+            params.append("cpf", searchState.query || "");
+
+            const response = await fetch("?/search", {
+                method: "POST",
+                body: params,
+            });
+
+            const result = deserialize(await response.text());
+            if (result.type === "success") {
+                users = result.data.users;
+                pagination = result.data.pagination;
+            } else {
+                toastState.error(result.data.error);
+            }
+        } catch (error) {
+            toastState.error(error.message);
+        } finally {
+            isLoading = false;
+        }
     }
 
     function editUser(id) {
@@ -37,7 +81,7 @@
             const params = new FormData();
             params.append("page", page);
             params.append("size", 10);
-            params.append("sort", "id,asc");
+            params.append("sort", `${sortState.key},${sortState.direction}`);
             params.append("nome", searchState.query || "");
             params.append("email", searchState.query || "");
             params.append("telefone", searchState.query || "");
@@ -80,7 +124,7 @@
                 const params = new FormData();
                 params.append("page", 0); // reset page to 0
                 params.append("size", pagination.itemsPerPage);
-                params.append("sort", "id,asc");
+                params.append("sort", `${sortState.key},${sortState.direction}`);
                 params.append("nome", searchState.query || "");
                 params.append("email", searchState.query || "");
                 params.append("telefone", searchState.query || "");
@@ -126,12 +170,16 @@
         <table>
             <thead>
                 <tr>
-                    <th onclick={() => sort("id")}>#</th>
-                    <th onclick={() => sort("name")}>Nome</th>
-                    <th onclick={() => sort("cpf")}>CPF</th>
-                    <th onclick={() => sort("email")}>Email</th>
-                    <th onclick={() => sort("phone")}>Telefone</th>
-                    <th>Ações</th>
+                    {#each columns as column, index (index)}
+                        <th class:sortable={column.sortable} onclick={(column.sortable) ? () => sort(column.key) : null}>
+                            <span class="column-label">{column.label}</span>
+                            {#if sortState.key === column.key}
+                                <span class="column-sort">
+                                    <i class="fas fa-lg fa-sort-{sortState.direction == 'asc' ? 'up' : 'down'}"></i>
+                                </span>
+                            {/if}
+                        </th>
+                    {/each}
                 </tr>
             </thead>
             <tbody>
@@ -261,7 +309,19 @@
         background: rgba(59, 130, 246, 0.1);
     }
 
+    .column-sort {
+        position: absolute;
+        right: 10px;
+        opacity: 0.5;
+        transition: opacity 0.2s;
+    }
+
+    th:hover .column-sort {
+        opacity: 1;
+    }
+
     th {
+        position: relative;
         padding: 12px 14px;
         text-align: left;
         font-weight: 600;
@@ -270,10 +330,20 @@
         text-transform: uppercase;
         letter-spacing: 0.5px;
         text-align: center;
+        user-select: none;
+        -webkit-user-select: none; /* Safari */        
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* IE10+/Edge */
+        -o-user-select: none; /* Opera */
+    }
+
+    th.sortable:hover {
+        cursor: pointer;
+        background: rgba(59, 130, 246, 0.1);
     }
 
     th:nth-child(1) {
-        width: 55px;
+        width: 70px;
     } /* # */
     th:nth-child(2) {
         width: auto;
@@ -329,7 +399,7 @@
         justify-content: center;
     }
 
-    .btn-icon {
+   .btn-icon {
         padding: 8px;
         background: rgba(59, 130, 246, 0.1);
         border: 1px solid rgba(59, 130, 246, 0.3);
@@ -337,6 +407,14 @@
         cursor: pointer;
         color: #3b82f6;
         transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        will-change: transform;
+    }
+
+    .btn-icon i {
+        pointer-events: none;
     }
 
     .btn-icon:hover {
@@ -346,11 +424,13 @@
 
     .btn-icon.delete {
         color: #ef4444;
+        background: rgba(239, 68, 68, 0.1);
         border-color: rgba(239, 68, 68, 0.3);
     }
 
     .btn-icon.delete:hover {
-        background: rgba(239, 68, 68, 0.1);
+        background: rgba(239, 68, 68, 0.2);
+        transform: scale(1.1);
     }
 
     /* Responsivo */

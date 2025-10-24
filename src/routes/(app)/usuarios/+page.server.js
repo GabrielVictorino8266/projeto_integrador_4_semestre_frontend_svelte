@@ -7,7 +7,7 @@ export async function load({ locals }) {
 	return { 
         users: result.users || [],
         pagination: result.pagination || {},
-        error: result.error ? 'Erro ao carregar usuários' : null,
+        error: result.error || null,
         session: { user: locals.user }
     };
 }

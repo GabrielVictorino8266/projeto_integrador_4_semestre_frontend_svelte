@@ -11,6 +11,9 @@ export const getUsers = async (authToken, params = {}) => {
                 query.set(key, value);
             }
         });
+        if (!query.has('sort')) {
+            query.set('sort', 'id,asc');
+        }
         if (!query.has('page')) {
             query.set('page', '0');
         }
