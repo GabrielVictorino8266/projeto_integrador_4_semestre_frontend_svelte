@@ -13,10 +13,7 @@ export const logger = {
 
   error(error, ...optional) {
     if (error instanceof Error) {
-      console.error(
-        `[ERROR] ${error.stack}`,
-        ...optional
-      );
+      console.error(`[ERROR] ${error.stack}`, ...optional);
     } else {
       console.error(`[ERROR] ${formatMessage(error)}`, ...optional);
     }
@@ -27,8 +24,8 @@ export const logger = {
 function formatMessage(message) {
   try {
     const err = new Error();
-    const stackLine = err.stack?.split('\n')[3]?.trim(); // caller line
-    const location = stackLine?.replace(/^at\s+/, '') || 'unknown';
+    const stackLine = err.stack?.split("\n")[3]?.trim(); // caller line
+    const location = stackLine?.replace(/^at\s+/, "") || "unknown";
     return `${message} (${location})`;
   } catch {
     return message;

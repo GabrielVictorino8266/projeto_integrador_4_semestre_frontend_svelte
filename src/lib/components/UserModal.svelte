@@ -33,13 +33,14 @@
 
     // --- EFFECTS ---
 
-    // Resets password field visibility when the modal is closed.
+    // Resets password field visibility and clears form errors when the modal is closed.
     $effect(() => {
         if (!isOpen) {
             showPasswordFields = false;
-            applyAction({ type: "success", status: 200, data: null });
+            $page.form = null;
         }
     });
+
 
     // --- FORM ENHANCEMENT ---
 
@@ -55,14 +56,14 @@
             // 2. Update the page to display new data or validation errors.
             await update();
 
-            // 3. Process the result only if it wasn't a 400 validation error.
-            if (result.status !== 400) {
-                if (result.type === "success") {
-                    onSaveSuccess?.(result.data);
-                } else {
-                    onSaveError?.(result.data);
-                }
+            // 3. Process the result based on type and status
+            if (result.type === "success") {
+                onSaveSuccess?.(result.data);
+            } else if (result.type === "failure" || result.type === "error") {
+                // Handle server errors (500, etc.) or validation failures
+                onSaveError?.(result.data);
             }
+            // Note: 400 validation errors are handled by update() and displayed via formErrors
             
             // 4. Reset submitting state.
             isSubmitting = false;
@@ -82,7 +83,9 @@
         use:enhance={handleSubmit}
         novalidate
     >
-        <input type="hidden" name="id" value={user?.id} />
+        {#if user?.id}
+            <input type="hidden" name="id" value={user.id} />
+        {/if}
 
         <div class="form-fields">
             <Input

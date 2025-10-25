@@ -1,283 +1,285 @@
-  @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css";
+@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css";
 
-  body {
-      margin: 0;
-      padding: 0;
-      font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
-          Cantarell, sans-serif;
-      background-color: #0a1628;
+body {
+  margin: 0;
+  padding: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+    Cantarell, sans-serif;
+  background-color: #0a1628;
+}
+
+.page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 10px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 13px;
+  color: #8b9cb6;
+}
+
+.login-link a {
+  color: #3b82f6;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.login-link a:hover {
+  color: #60a5fa;
+  text-decoration: underline;
+}
+
+footer {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 11px;
+  color: #4a5f7f;
+}
+
+.btn {
+  flex: 1;
+  padding: 11px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: #162844;
+  color: #8b9cb6;
+  border: 1px solid #1e3a5f;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #1a2f4d;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+}
+
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.btn-primary:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.btn-primary.loading::before {
+  animation: shimmer 1s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
   }
 
-  .page-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      padding: 10px;
+  100% {
+    left: 100%;
+  }
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn i {
+  font-size: 17px;
+}
+
+/* Form animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
 
-  .section-title {
-      font-size: 16px;
-      font-weight: 600;
-      color: white;
-      margin-bottom: 18px;
-      text-align: center;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
+}
 
-  .login-link {
-      text-align: center;
-      margin-top: 15px;
-      font-size: 13px;
-      color: #8b9cb6;
-  }
+.fade-in {
+  animation: fadeIn 0.4s ease;
+}
 
-  .login-link a {
-      color: #3b82f6;
-      text-decoration: none;
-      transition: color 0.3s;
-  }
+input {
+  width: 100%;
+  padding: 10px 14px;
+  background-color: #162844;
+  border: 1px solid #1e3a5f;
+  border-radius: 4px;
+  color: white;
+  font-size: 13px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
 
-  .login-link a:hover {
-      color: #60a5fa;
-      text-decoration: underline;
-  }
+input::placeholder {
+  color: #4a5f7f;
+}
 
-  footer {
-      margin-top: 15px;
-      text-align: center;
-      font-size: 11px;
-      color: #4a5f7f;
-  }
+input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background-color: #1a2f4d;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
 
-  .btn {
-      flex: 1;
-      padding: 11px;
-      border: none;
-      border-radius: 4px;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-weight: 600;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-  }
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
 
-  .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-  }
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #1a3250 inset !important;
+  -webkit-text-fill-color: white !important;
+  border-color: #2d5a8a !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
 
-  .btn-secondary {
-      background-color: #162844;
-      color: #8b9cb6;
-      border: 1px solid #1e3a5f;
-  }
+input:disabled:-webkit-autofill,
+input:disabled:-webkit-autofill:hover,
+input:disabled:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 30px #0e1a2f inset !important;
+  -webkit-text-fill-color: #6b7f9f !important;
+}
 
-  .btn-secondary:hover:not(:disabled) {
-      background-color: #1a2f4d;
-      color: white;
-      border-color: #3b82f6;
-  }
+input:disabled {
+  cursor: not-allowed;
+  background-color: #0e1a2f;
+  color: #6b7f9f;
+  border-color: #1e3a5f;
+  opacity: 0.7;
+}
 
-  .btn-primary {
-      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-      color: white;
-  }
+input:disabled:focus {
+  border-color: #1e3a5f;
+  background-color: #0e1a2f;
+  box-shadow: none;
+}
 
-  .btn-primary::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-      transition: left 0.5s;
-  }
+.form-group {
+  margin-bottom: 14px;
+  flex: 1;
+}
 
-  .btn-primary:hover:not(:disabled)::before {
-      left: 100%;
-  }
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #8b9cb6;
+  transition: color 0.3s;
+}
 
-  .btn-primary.loading::before {
-      animation: shimmer 1s infinite;
-  }
+.required {
+  color: #ef4444;
+}
 
-  @keyframes shimmer {
-      0% {
-          left: -100%;
-      }
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
 
-      100% {
-          left: 100%;
-      }
-  }
+input.with-copy {
+  padding-right: 42px;
+}
 
-  .btn-primary:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
-  }
+.copy-btn {
+  position: absolute;
+  right: 8px;
+  background: transparent;
+  border: none;
+  color: #8b9cb6;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  .btn-primary:active:not(:disabled) {
-      transform: translateY(0);
-  }
+.copy-btn:hover:not(:disabled) {
+  background-color: #1a2f4d;
+  color: #3b82f6;
+}
 
-  .btn i {
-      font-size: 17px;
-  }
+.copy-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
 
-  /* Form animations */
-  @keyframes fadeIn {
-      from {
-          opacity: 0;
-          transform: translateY(10px);
-      }
+.copy-btn i {
+  font-size: 13px;
+}
 
-      to {
-          opacity: 1;
-          transform: translateY(0);
-      }
-  }
+input.error {
+  border-color: #ef4444;
+}
 
-  .fade-in {
-      animation: fadeIn 0.4s ease;
-  }
+.hint {
+  font-size: 11px;
+  color: #6b7f9f;
+  margin-top: 3px;
+}
 
-  input {
-      width: 100%;
-      padding: 10px 14px;
-      background-color: #162844;
-      border: 1px solid #1e3a5f;
-      border-radius: 4px;
-      color: white;
-      font-size: 13px;
-      transition: all 0.3s ease;
-      box-sizing: border-box;
-  }
-
-  input::placeholder {
-      color: #4a5f7f;
-  }
-
-  input:focus {
-      outline: none;
-      border-color: #3b82f6;
-      background-color: #1a2f4d;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  }
-
-
-  input[type="date"]::-webkit-calendar-picker-indicator {
-      filter: invert(1);
-      cursor: pointer;
-  }
-
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus,
-  input:-webkit-autofill:active {
-      -webkit-box-shadow: 0 0 0 30px #1a3250 inset !important;
-      -webkit-text-fill-color: white !important;
-      border-color: #2d5a8a !important;
-      transition: background-color 5000s ease-in-out 0s;
-  }
-
-  input:disabled:-webkit-autofill,
-  input:disabled:-webkit-autofill:hover,
-  input:disabled:-webkit-autofill:focus {
-      -webkit-box-shadow: 0 0 0 30px #0e1a2f inset !important;
-      -webkit-text-fill-color: #6b7f9f !important;
-  }
-
-  input:disabled {
-      cursor: not-allowed;
-      background-color: #0e1a2f;
-      color: #6b7f9f;
-      border-color: #1e3a5f;
-      opacity: 0.7;
-  }
-
-  input:disabled:focus {
-      border-color: #1e3a5f;
-      background-color: #0e1a2f;
-      box-shadow: none;
-  }
-
-  .form-group {
-      margin-bottom: 14px;
-      flex: 1;
-  }
-
-  label {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 13px;
-      color: #8b9cb6;
-      transition: color 0.3s;
-  }
-
-  .required {
-      color: #ef4444;
-  }
-
-  .input-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-  }
-
-
-  input.with-copy {
-      padding-right: 42px;
-  }
-
-  .copy-btn {
-      position: absolute;
-      right: 8px;
-      background: transparent;
-      border: none;
-      color: #8b9cb6;
-      cursor: pointer;
-      padding: 6px 8px;
-      border-radius: 4px;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-  }
-
-  .copy-btn:hover:not(:disabled) {
-      background-color: #1a2f4d;
-      color: #3b82f6;
-  }
-
-  .copy-btn:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-  }
-
-  .copy-btn i {
-      font-size: 13px;
-  }
-
-
-  input.error {
-      border-color: #ef4444;
-  }
-
-  .hint {
-      font-size: 11px;
-      color: #6b7f9f;
-      margin-top: 3px;
-  }
-
-  .error-text {
-      font-size: 11px;
-      color: #ef4444;
-      margin-top: 3px;
-  }
+.error-text {
+  font-size: 11px;
+  color: #ef4444;
+  margin-top: 3px;
+}
