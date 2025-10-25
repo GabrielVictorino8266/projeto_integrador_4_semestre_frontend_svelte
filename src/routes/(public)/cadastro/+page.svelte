@@ -1,7 +1,7 @@
 <script>
   import '$lib/assets/cadastro.css';
 
-  import { toastState } from "$lib/state/toast.svelte.js";
+  import { toastState } from "$lib/stores/toast.svelte.js";
   import { goto } from "$app/navigation";
   import { deserialize } from "$app/forms";
   import { logger } from "$lib/utils/logger";

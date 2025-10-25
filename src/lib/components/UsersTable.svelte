@@ -1,32 +1,28 @@
 <script>
-    const { users, onEdit, onDelete } = $props();
+    import DataTable from "./ui/DataTable.svelte";
+
+    const {
+        users,
+        onSort = () => {},
+        onPageChange = () => {},
+        onSearch = () => {},
+        onEdit = () => {},
+        onDelete = () => {},
+    } = $props();
+
+    const columns = [
+        { key: "id", label: "ID" },
+        { key: "nome", label: "Nome" },
+        { key: "cpf", label: "CPF" },
+        { key: "email", label: "Email" },
+        { key: "telefone", label: "Telefone" },
+        { key: "acoes", label: "Ações" },
+    ];
 </script>
 
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>CPF</th>
-            <th>Email</th>
-            <th>Telefone</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        {#each users as user (user.id)}
-            <tr>
-                <td>{user.id}</td>
-                <td>{user.nome}</td>
-                <td>{user.cpf}</td>
-                <td>{user.email}</td>
-                <td>{user.telefone}</td>
-                <td>
-                    <button onclick={() => onEdit?.(user.id)}>Editar</button>
-                    <button onclick={() => onDelete?.(user.id)}>Excluir</button>
-                </td>
-            </tr>
-        {/each}
-    </tbody>
-</table>
-
+<DataTable {columns} items={users} {onSort} {onPageChange} {onSearch}>
+    {#snippet acoes(user)}
+        <button onclick={() => onEdit?.(user)}>Editar</button>
+        <button onclick={() => onDelete?.(user)}>Excluir</button>
+    {/snippet}
+</DataTable>

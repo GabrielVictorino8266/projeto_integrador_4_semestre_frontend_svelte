@@ -1,5 +1,10 @@
 <script>
-    const { items, columns, cellRenderers, onSort } = $props();
+    const { 
+        items, 
+        columns, 
+        cellRenderers, 
+        onSort = (_key, _order) => {},
+    } = $props();
 
     let sortOrder = $state("desc");
     let sortKey = $state(null);

@@ -1,6 +1,6 @@
-export function createUserModalState(onSuccess, onError) {
-  let abortController = null;
+import { toastState } from "./toast.svelte";
 
+export function createUserModalState() {
   let modalState = $state({
     user: null,
     open: false,
@@ -8,65 +8,48 @@ export function createUserModalState(onSuccess, onError) {
     saving: false,
   });
 
-  const resetModalState = () => {
-    modalState = {
-      user: null,
-      open: false,
-      editing: false,
-      saving: false,
-    };
+  const close = () => {
+    modalState.user = null;
+    modalState.open = false;
+    modalState.editing = false;
+    modalState.saving = false;
   };
 
-  const handleClose = () => {
-    abortController?.abort();
-    resetModalState();
+  const openForEdit = (user) => {
+    modalState.user = user;
+    modalState.open = true;
+    modalState.editing = true;
+    modalState.saving = false;
   };
 
-  const handleEdit = (user) => {
-    modalState = {
-      user,
-      open: true,
-      editing: true,
-      saving: false,
-    };
+  const openForDelete = (user) => {
+    modalState.user = user;
+    modalState.open = true;
+    modalState.editing = false;
+    modalState.saving = false;
   };
 
-  const handleDelete = (user) => {
-    modalState = {
-      user,
-      open: true,
-      editing: false,
-      saving: false,
-    };
+  const startSaving = () => {
+    modalState.saving = true;
   };
 
-  const handleSaveSuccess = (data) => {
-    onSuccess?.("Usuário salvo com sucesso!");
-    resetModalState();
+  const handleSuccess = (message = "Operação realizada com sucesso!") => {
+    toastState.success(message);
+    close();
   };
 
-  const handleSaveError = ({ error }) => {
-    onError?.(error);
-    resetModalState();
+  const handleError = (error) => {
+    toastState.error(error);
+    modalState.saving = false; // Keep modal open for retry
   };
 
   return {
-    get open() {
-      return modalState.open;
-    },
-    get editing() {
-      return modalState.editing;
-    },
-    get user() {
-      return modalState.user;
-    },
-    get saving() {
-      return modalState.saving;
-    },
-    handleClose,
-    handleEdit,
-    handleDelete,
-    handleSaveSuccess,
-    handleSaveError,
+    get state() { return modalState; },
+    close,
+    openForEdit,
+    openForDelete,
+    startSaving,
+    handleSuccess,
+    handleError,
   };
 }

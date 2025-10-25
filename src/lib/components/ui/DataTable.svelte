@@ -10,9 +10,9 @@
         pagination = true,
         pageSize = 10,
         toolbar = null,
-        onSort = () => {},
-        onSearch = () => {},
-        onPageChange = () => {},
+        onSort = (_key, _order) => {},
+        onSearch = (_value) => {},
+        onPageChange = (_page) => {},
         ...cellRenderers
     } = $props();
 

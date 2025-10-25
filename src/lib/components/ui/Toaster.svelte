@@ -1,6 +1,6 @@
 <script>
 	import { fly } from 'svelte/transition';
-	import { toastState } from '$lib/state/toast.svelte.js';
+	import { toastState } from '$lib/stores/toast.svelte.js';
 </script>
 
 {#each toastState.toasts as toast, index (toast.id)}
