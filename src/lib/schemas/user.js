@@ -13,8 +13,8 @@ export const UserSchema = z.object({
 
   cpf: z
     .string()
-    .regex(/^\d{11}$/, "O CPF deve conter 11 dígitos.")
-    .length(11),
+    .transform(s => s.replace(/\D/g, ''))
+    .refine(s => s.length === 11, "O CPF deve conter 11 dígitos."),
 
   email: z.string().email("Formato de e-mail inválido.").max(100),
 
@@ -29,8 +29,9 @@ export const UserSchema = z.object({
 
   telefone: z
     .string()
-    .min(1, "O telefone é obrigatório.")
-    .max(20, "O telefone deve ter no máximo 20 caracteres."),
+    .transform(s => s.replace(/\D/g, ''))
+    .refine(s => s.length >= 1, "O telefone é obrigatório.")
+    .refine(s => s.length <= 20, "O telefone deve ter no máximo 20 caracteres."),
 });
 
 export const UpsertUserSchema = UserSchema.partial()

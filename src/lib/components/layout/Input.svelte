@@ -19,12 +19,24 @@
 
   let copied = $state(false);
   let errorKey = $state(0);
+  let unmaskedValue = undefined;
   
   $effect(() => {
     if (error) {
       errorKey = Date.now(); // Change key to force re-mount
     }
   })
+
+  const handleMaska = (event) => {
+    unmaskedValue = event.unmasked;
+  };
+
+  const handleCopy = (event) => {
+    if (unmaskedValue !== undefined) {
+      event.preventDefault();
+      navigator.clipboard.writeText(unmaskedValue);
+    }
+  };
 
   function shake() {
     return {
@@ -40,7 +52,7 @@
   }
 
   function copyToClipboard() {
-    navigator.clipboard.writeText(value).then(() => {
+    navigator.clipboard.writeText(unmaskedValue !== undefined ? unmaskedValue : value).then(() => {
       copied = true;
       setTimeout(() => {
         copied = false;
@@ -66,7 +78,8 @@
         bind:value
         class:error
         class:with-copy={copyable}
-        use:maska={{ mask }}
+        use:maska={{ mask, onMaska: handleMaska }}
+        oncopy={handleCopy}
         {...props}
       />
       

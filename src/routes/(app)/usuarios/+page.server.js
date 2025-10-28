@@ -47,9 +47,9 @@ export const actions = {
     }
 
     const service = userService(locals.token);
-    const result = user.id
-      ? await service.updateUser(user)
-      : await service.createUser(user);
+    const result = validation.data.id
+      ? await service.updateUser(validation.data)
+      : await service.createUser(validation.data);
 
     return result.error
       ? fail(500, { error: result.error })
