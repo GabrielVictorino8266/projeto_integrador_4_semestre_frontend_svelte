@@ -4,9 +4,10 @@
     import { resolve } from '$app/paths';
     import '$lib/assets/app.css';
 
-    let { children } = $props();
+    let { data, children } = $props();
     let currentPath = $derived($page.url.pathname);
     let title = $derived($page.data.title || currentPath.replace('/', ''));
+    let userName = $derived(data?.user?.nome);
 </script>
 
 <div class="layout">
@@ -57,7 +58,7 @@
           <div class="user-avatar">
             <i class="fa-solid fa-user"></i>
           </div>
-          <span class="user-name">Anderson</span>
+          <span class="user-name">{userName}</span>
         </div>
         <button aria-label="Sair" class="btn-logout" onclick={() => goto(resolve('/logout'))}>
           <i class="fa-solid fa-right-from-bracket"></i>

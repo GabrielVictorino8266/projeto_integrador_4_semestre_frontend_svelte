@@ -117,7 +117,7 @@
           </svg>
           <span class="logo-text">DRIVEFLOW</span>
         </div>
-        <a href="/login" class="header-btn">Entrar</a>
+        <a href={resolve("/login")} class="header-btn">Entrar</a>
       </div>
     </header>
   

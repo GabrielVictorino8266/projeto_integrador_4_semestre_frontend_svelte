@@ -10,7 +10,7 @@ export async function handle({ event, resolve }) {
     event.url.pathname.startsWith("/login") ||
     event.url.pathname.startsWith("/cadastro")
   ) {
-    if (session?.user) {
+  if (session?.user && event.request.method === "GET") {
       return new Response(null, {
         status: 302,
         headers: { Location: "/dashboard" },

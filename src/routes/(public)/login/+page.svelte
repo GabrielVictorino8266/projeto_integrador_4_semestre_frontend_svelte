@@ -1,6 +1,4 @@
 <script>
-    import '$lib/assets/login.css';
-
     import { slide } from 'svelte/transition';
     import { enhance } from '$app/forms';
 
@@ -29,6 +27,10 @@
     }
 </script>
 
+<svelte:head>
+    <link rel="stylesheet" href="/login.css">
+</svelte:head>
+
 <div class="login-container">
     <div class="login-card">
         <div class="logo-section">
@@ -36,14 +38,16 @@
 
         <form method="post" use:enhance>
             {#if form?.error}
-                <div class="error-message" transition:slide>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                    </svg>
-                    <span>{form.error}</span>
-                </div>
+                {#key form.error}
+                    <div class="error-message" transition:slide>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <span>{form.error}</span>
+                    </div>
+                {/key}
             {/if}
 
             <div class="form-group">

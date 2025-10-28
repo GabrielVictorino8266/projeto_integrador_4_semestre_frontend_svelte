@@ -1,18 +1,18 @@
-import { userService } from "$lib/api/users";
+import { vehicleService } from "$lib/api/vehicles";
 import { fail } from "@sveltejs/kit";
-import { UpsertUserSchema } from "$lib/schemas/user";
+import { VehicleSchema } from "$lib/schemas/vehicle";
 import { getValidationErrors } from "$lib/utils/validation";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ locals }) {
-  const service = userService(locals.token);
+  const service = vehicleService(locals.token);
   const result = await service.getAll();
   return {
     items: result.items || [],
     pagination: result.pagination || {},
     error: result.error || null,
     session: { user: locals.user },
-    title: 'Gerenciamento de Usuários',
+    title: 'Gerenciamento de Veículos',
   };
 }
 
@@ -25,13 +25,13 @@ export const actions = {
       page: data.get("page"),
       size: data.get("size"),
       sort: data.get("sort"),
-      nome: searchQuery,
-      email: searchQuery,
-      telefone: searchQuery,
-      cpf: searchQuery,
+      placa: searchQuery,
+      modelo: searchQuery,
+      marca: searchQuery,
+      chassi: searchQuery,
     };
 
-    const service = userService(locals.token);
+    const service = vehicleService(locals.token);
     const result = await service.getAll(params);
     return result.error
       ? fail(500, { error: result.error })
@@ -39,27 +39,27 @@ export const actions = {
   },
 
   save: async ({ request, locals }) => {
-    const user = Object.fromEntries(await request.formData());
+    const vehicle = Object.fromEntries(await request.formData());
 
-    const validation = UpsertUserSchema.safeParse(user);
+    const validation = VehicleSchema.safeParse(vehicle);
     if (!validation.success) {
       return fail(400, { errors: getValidationErrors(validation) });
     }
 
-    const service = userService(locals.token);
+    const service = vehicleService(locals.token);
     const result = validation.data.id
       ? await service.update(validation.data)
       : await service.create(validation.data);
 
     return result.error
       ? fail(500, { error: result.error })
-      : { user: result.item };
+      : { vehicle: result.item };
   },
 
   delete: async ({ request, locals }) => {
     const data = await request.formData();
     const id = data.get("id");
-    const service = userService(locals.token);
+    const service = vehicleService(locals.token);
     const result = await service.delete(id);
     return result.error
       ? fail(500, { error: result.error })
