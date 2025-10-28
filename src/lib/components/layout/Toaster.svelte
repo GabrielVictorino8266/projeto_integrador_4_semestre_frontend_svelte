@@ -1,14 +1,13 @@
 <script>
-	import { flip } from 'svelte/animate';
 	import { fly } from 'svelte/transition';
-	import { toastState } from '$lib/state/toast.svelte.js';
+	import { toastState } from '$lib/stores/toast.svelte.js';
 </script>
+
 {#each toastState.toasts as toast, index (toast.id)}
 	<div 
 		class="toast toast-{toast.type}" 
 		style="top: {30 + index * 110}px; --toast-duration: {toast.duration}ms"
 		transition:fly={{ x: 400, duration: 300 }}
-		animate:flip={{ duration: 300 }}
 	>
 		<div class="toast-icon">
 			{#if toast.type === 'success'}
@@ -31,6 +30,7 @@
 		<div class="toast-progress toast-progress-{toast.type}"></div>
 	</div>
 {/each}
+
 <style>
 	.toast {
 		position: fixed;
@@ -43,8 +43,7 @@
 		display: flex;
 		align-items: center;
 		gap: 16px;
-		min-width: 320px;
-		max-width: 450px;
+		width: 350px;
 		z-index: 3000;
 		box-shadow: 
 			0 4px 6px rgba(0, 0, 0, 0.1),

@@ -7,7 +7,7 @@
  */
 export function validarCNPJ(cnpj) {
   // Remove caracteres não numéricos
-  cnpj = cnpj.replace(/[^\d]/g, '');
+  cnpj = cnpj.replace(/[^\d]/g, "");
 
   // Verifica se tem 14 dígitos
   if (cnpj.length !== 14) {
@@ -66,7 +66,7 @@ export function validarCNPJ(cnpj) {
  */
 export function validarCPF(cpf) {
   // Remove caracteres não numéricos
-  cpf = cpf.replace(/[^\d]/g, '');
+  cpf = cpf.replace(/[^\d]/g, "");
 
   // Verifica se tem 11 dígitos
   if (cpf.length !== 11) {
@@ -124,7 +124,7 @@ export function validarEmail(email) {
     return false;
   }
 
-  const parts = email.split('@');
+  const parts = email.split("@");
 
   // Deve ter exatamente um @
   if (parts.length !== 2) {
@@ -144,12 +144,12 @@ export function validarEmail(email) {
   }
 
   // Domínio deve ter pelo menos um ponto
-  if (!domain.includes('.')) {
+  if (!domain.includes(".")) {
     return false;
   }
 
   // Verifica pontos consecutivos
-  if (email.includes('..')) {
+  if (email.includes("..")) {
     return false;
   }
 
@@ -168,7 +168,11 @@ export function validarEmail(email) {
  * @param {number} idadeMaxima - Idade máxima permitida.
  * @returns {boolean} - true se a idade for válida, false caso contrário.
  */
-export function validarIdade(dataNascimento, idadeMinima = 0, idadeMaxima = 150) {
+export function validarIdade(
+  dataNascimento,
+  idadeMinima = 0,
+  idadeMaxima = 150,
+) {
   let birthDate;
 
   if (dataNascimento instanceof Date) {
@@ -177,7 +181,7 @@ export function validarIdade(dataNascimento, idadeMinima = 0, idadeMaxima = 150)
     const dateStr = dataNascimento.toString().trim();
 
     if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateStr)) {
-      const [day, month, year] = dateStr.split('/');
+      const [day, month, year] = dateStr.split("/");
       // Atenção: Mês é 0-indexado no JavaScript
       birthDate = new Date(year, month - 1, day);
     } else if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
@@ -200,7 +204,10 @@ export function validarIdade(dataNascimento, idadeMinima = 0, idadeMaxima = 150)
   let age = today.getFullYear() - birthDate.getFullYear();
   const monthDiff = today.getMonth() - birthDate.getMonth();
 
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && today.getDate() < birthDate.getDate())
+  ) {
     age--;
   }
 
@@ -218,7 +225,7 @@ export function validarIdade(dataNascimento, idadeMinima = 0, idadeMaxima = 150)
  */
 export function validarTelefone(telefone) {
   // Remove caracteres não numéricos
-  telefone = telefone.replace(/[^\d]/g, '');
+  telefone = telefone.replace(/[^\d]/g, "");
 
   // Verifica o comprimento (10 ou 11 dígitos)
   if (telefone.length < 10 || telefone.length > 11) {
@@ -236,33 +243,10 @@ export function validarTelefone(telefone) {
   // Lista de DDDs válidos (simplificada - a lista original no código é mais completa)
   // Para manter a funcionalidade original, vamos usar a lista completa do código original.
   const dddValidos = [
-    11, 12, 13, 14, 15, 16, 17, 18, 19,
-    21, 22, 24,
-    27, 28,
-    31, 32, 33, 34, 35, 37, 38,
-    41, 42, 43, 44, 45, 46,
-    47, 48, 49,
-    51, 53, 54, 55,
-    61,
-    62, 64,
-    63,
-    65, 66,
-    67,
-    68,
-    69,
-    71, 73, 74, 75, 77,
-    79,
-    81, 87,
-    82,
-    83,
-    84,
-    85, 88,
-    86, 89,
-    91, 93, 94,
-    92, 97,
-    95,
-    96,
-    98, 99
+    11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 24, 27, 28, 31, 32, 33, 34, 35,
+    37, 38, 41, 42, 43, 44, 45, 46, 47, 48, 49, 51, 53, 54, 55, 61, 62, 64, 63,
+    65, 66, 67, 68, 69, 71, 73, 74, 75, 77, 79, 81, 87, 82, 83, 84, 85, 88, 86,
+    89, 91, 93, 94, 92, 97, 95, 96, 98, 99,
   ];
 
   if (!dddValidos.includes(ddd)) {
@@ -272,7 +256,7 @@ export function validarTelefone(telefone) {
   // Para 11 dígitos (móvel), o terceiro dígito deve ser 9
   if (telefone.length === 11) {
     const terceiroDigito = telefone.charAt(2);
-    if (terceiroDigito !== '9') {
+    if (terceiroDigito !== "9") {
       return false;
     }
   }
@@ -294,13 +278,29 @@ export function validarTelefone(telefone) {
  * @returns {number} - A força da senha.
  */
 export function validarSenha(senha) {
-    let score = 0;
-    if (senha.length >= 8) score++;
-    if (senha.length >= 12) score++;
-    if (/[a-z]/.test(senha)) score++;
-    if (/[A-Z]/.test(senha)) score++;
-    if (/[0-9]/.test(senha)) score++;
-    if (/[^a-zA-Z0-9]/.test(senha)) score++;
+  let score = 0;
+  if (senha.length >= 8) score++;
+  if (senha.length >= 12) score++;
+  if (/[a-z]/.test(senha)) score++;
+  if (/[A-Z]/.test(senha)) score++;
+  if (/[0-9]/.test(senha)) score++;
+  if (/[^a-zA-Z0-9]/.test(senha)) score++;
 
-    return score;
+  return score;
+}
+
+/**
+ * Flattens zod validation errors to a single object.
+ * @param {z.ZodError} validation - The zod validation error.
+ * @returns {Object} - An object containing the flattened errors.
+ */
+export function getValidationErrors(validation) {
+  /** @type {Object.<string, string>} */
+  const errors = {};
+  for (const [key, messages] of Object.entries(
+    validation.error.flatten().fieldErrors,
+  )) {
+    errors[key] = messages[0];
+  }
+  return errors;
 }

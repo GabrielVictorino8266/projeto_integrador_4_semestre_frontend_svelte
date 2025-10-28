@@ -1,192 +1,204 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gerenciador de Usuários</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <div class="container">
-        <div class="header">
-            <h1>👥 Gerenciador de Usuários</h1>
-            <p>Cadastre e gerencie seus usuários</p>
-        </div>
+      <div class="header">
+        <h1>👥 Gerenciador de Usuários</h1>
+        <p>Cadastre e gerencie seus usuários</p>
+      </div>
 
-        <div class="form-section">
-            <h2 style="margin-bottom: 20px; color: #333;">
-                <span id="formTitle">Novo Usuário</span>
-            </h2>
-            <form id="usuarioForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="nome">Nome *</label>
-                        <input type="text" id="nome" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email *</label>
-                        <input type="email" id="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="cpf">CPF *</label>
-                        <input type="text" id="cpf" maxlength="14" required>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="dataNascimento">Data de Nascimento *</label>
-                        <input type="date" id="dataNascimento" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="telefone">Telefone *</label>
-                        <input type="text" id="telefone" maxlength="15" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="empresa">Empresa *</label>
-                        <select id="empresa" required>
-                            <option value="">Selecione uma empresa</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-                    <button type="button" class="btn btn-secondary" id="btnCancel" style="display: none;">Cancelar</button>
-                </div>
-            </form>
-        </div>
-
-        <div class="table-section">
-            <div class="table-header">
-                <h2>Lista de Usuários</h2>
+      <div class="form-section">
+        <h2 style="margin-bottom: 20px; color: #333">
+          <span id="formTitle">Novo Usuário</span>
+        </h2>
+        <form id="usuarioForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nome">Nome *</label>
+              <input type="text" id="nome" required />
             </div>
-            <table id="usuariosTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nome</th>
-                        <th>Email</th>
-                        <th>CPF</th>
-                        <th>Data Nascimento</th>
-                        <th>Telefone</th>
-                        <th>Empresa</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="usuariosBody">
-                </tbody>
-            </table>
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input type="email" id="email" required />
+            </div>
+            <div class="form-group">
+              <label for="cpf">CPF *</label>
+              <input type="text" id="cpf" maxlength="14" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="dataNascimento">Data de Nascimento *</label>
+              <input type="date" id="dataNascimento" required />
+            </div>
+            <div class="form-group">
+              <label for="telefone">Telefone *</label>
+              <input type="text" id="telefone" maxlength="15" required />
+            </div>
+            <div class="form-group">
+              <label for="empresa">Empresa *</label>
+              <select id="empresa" required>
+                <option value="">Selecione uma empresa</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="btnCancel"
+              style="display: none"
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="table-section">
+        <div class="table-header">
+          <h2>Lista de Usuários</h2>
         </div>
+        <table id="usuariosTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>CPF</th>
+              <th>Data Nascimento</th>
+              <th>Telefone</th>
+              <th>Empresa</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="usuariosBody"></tbody>
+        </table>
+      </div>
     </div>
 
     <script>
-        const API_BASE_URL = 'http://localhost:7777/api';
-        const API_URL = `${API_BASE_URL}/usuarios`;
-        const AUTH_TOKEN = 'Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktand0Iiwic3ViIjoiMTIzNDU2Nzg5MDEiLCJleHAiOjE3NjA4MTczMzQsImlhdCI6MTc2MDgxMzczNCwic2NvcGUiOiJST0xFX0FETUlOIn0.oNpgPw8aUCkvGThi1SLGiCOJsi4Yu2dyp9lPoWwSP9oS4Q-naEsYe7hF4AVTlzF1N0czDru_IdZbQraM-FGXW0mLqVzOT6QgYpbfaMdfLNvtZS1xf8w87eoT8JNsY0z986SKAybpMO4JUKiPYEoFa7r5mxkmKYljFBVpnQiXOH29WeEHv2dR-vfSYKjwFI-lIOA1sPMCARNyBJNTm2CZaGdcgAZ8rO4jUn4En7GonWmLFsXXKdHOpmJ12_VeLWJV2WiLr6h7CndAdONQA1HhFD6Gf7ZNGVjEPNjCoStgZnSyxEYvxxaAlYfpJA2JBFZK1j8ErDa7fezZVW09cEPaxw';
+      const API_BASE_URL = "http://localhost:7777/api";
+      const API_URL = `${API_BASE_URL}/usuarios`;
+      const AUTH_TOKEN =
+        "Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktand0Iiwic3ViIjoiMTIzNDU2Nzg5MDEiLCJleHAiOjE3NjA4MTczMzQsImlhdCI6MTc2MDgxMzczNCwic2NvcGUiOiJST0xFX0FETUlOIn0.oNpgPw8aUCkvGThi1SLGiCOJsi4Yu2dyp9lPoWwSP9oS4Q-naEsYe7hF4AVTlzF1N0czDru_IdZbQraM-FGXW0mLqVzOT6QgYpbfaMdfLNvtZS1xf8w87eoT8JNsY0z986SKAybpMO4JUKiPYEoFa7r5mxkmKYljFBVpnQiXOH29WeEHv2dR-vfSYKjwFI-lIOA1sPMCARNyBJNTm2CZaGdcgAZ8rO4jUn4En7GonWmLFsXXKdHOpmJ12_VeLWJV2WiLr6h7CndAdONQA1HhFD6Gf7ZNGVjEPNjCoStgZnSyxEYvxxaAlYfpJA2JBFZK1j8ErDa7fezZVW09cEPaxw";
 
-        let usuarios = [];
-        let empresas = [];
-        let editingId = null;
+      let usuarios = [];
+      let empresas = [];
+      let editingId = null;
 
-        const form = document.getElementById('usuarioForm');
-        const nomeInput = document.getElementById('nome');
-        const emailInput = document.getElementById('email');
-        const cpfInput = document.getElementById('cpf');
-        const dataNascimentoInput = document.getElementById('dataNascimento');
-        const telefoneInput = document.getElementById('telefone');
-        const empresaSelect = document.getElementById('empresa');
-        const usuariosBody = document.getElementById('usuariosBody');
-        const formTitle = document.getElementById('formTitle');
-        const btnCancel = document.getElementById('btnCancel');
+      const form = document.getElementById("usuarioForm");
+      const nomeInput = document.getElementById("nome");
+      const emailInput = document.getElementById("email");
+      const cpfInput = document.getElementById("cpf");
+      const dataNascimentoInput = document.getElementById("dataNascimento");
+      const telefoneInput = document.getElementById("telefone");
+      const empresaSelect = document.getElementById("empresa");
+      const usuariosBody = document.getElementById("usuariosBody");
+      const formTitle = document.getElementById("formTitle");
+      const btnCancel = document.getElementById("btnCancel");
 
-        // Fetch empresas para o select
-        async function fetchEmpresas() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/empresas`, {
-                    headers: { 'Authorization': AUTH_TOKEN }
-                });
-                if (!response.ok) throw new Error('Erro ao carregar empresas');
-                empresas = await response.json();
-                
-                empresaSelect.innerHTML = '<option value="">Selecione uma empresa</option>';
-                empresas.forEach(empresa => {
-                    const option = document.createElement('option');
-                    option.value = empresa.id;
-                    option.textContent = empresa.nomeFantasia;
-                    empresaSelect.appendChild(option);
-                });
-            } catch (error) {
-                console.error('Erro:', error);
-            }
+      // Fetch empresas para o select
+      async function fetchEmpresas() {
+        try {
+          const response = await fetch(`${API_BASE_URL}/empresas`, {
+            headers: { Authorization: AUTH_TOKEN },
+          });
+          if (!response.ok) throw new Error("Erro ao carregar empresas");
+          empresas = await response.json();
+
+          empresaSelect.innerHTML =
+            '<option value="">Selecione uma empresa</option>';
+          empresas.forEach((empresa) => {
+            const option = document.createElement("option");
+            option.value = empresa.id;
+            option.textContent = empresa.nomeFantasia;
+            empresaSelect.appendChild(option);
+          });
+        } catch (error) {
+          console.error("Erro:", error);
+        }
+      }
+
+      // Fetch usuarios
+      async function fetchUsuarios() {
+        try {
+          const response = await fetch(API_URL, {
+            headers: { Authorization: AUTH_TOKEN },
+          });
+          if (!response.ok) throw new Error("Erro ao carregar usuários");
+          usuarios = await response.json();
+          renderTable();
+        } catch (error) {
+          console.error("Erro:", error);
+          usuariosBody.innerHTML =
+            '<tr><td colspan="8" class="empty-state">Erro ao carregar usuários</td></tr>';
+        }
+      }
+
+      // Formatar CPF
+      cpfInput.addEventListener("input", function (e) {
+        let value = e.target.value.replace(/\D/g, "");
+        if (value.length <= 11) {
+          value = value.replace(/(\d{3})(\d)/, "$1.$2");
+          value = value.replace(/(\d{3})(\d)/, "$1.$2");
+          value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+          e.target.value = value;
+        }
+      });
+
+      // Formatar Telefone
+      telefoneInput.addEventListener("input", function (e) {
+        let value = e.target.value.replace(/\D/g, "");
+        if (value.length <= 11) {
+          value = value.replace(/(\d{2})(\d)/, "($1) $2");
+          value = value.replace(/(\d{5})(\d)/, "$1-$2");
+          e.target.value = value;
+        }
+      });
+
+      // Helper functions
+      function formatCPF(cpf) {
+        if (!cpf) return "Não informado";
+        const cleaned = cpf.toString().replace(/\D/g, "");
+        return cleaned.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+      }
+
+      function formatTelefone(telefone) {
+        if (!telefone) return "Não informado";
+        const cleaned = telefone.toString().replace(/\D/g, "");
+        return cleaned.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+      }
+
+      function formatDate(date) {
+        if (!date) return "Não informado";
+        const [year, month, day] = date.split("-");
+        return `${day}/${month}/${year}`;
+      }
+
+      function getEmpresaName(empresaId) {
+        const empresa = empresas.find((e) => e.id === empresaId);
+        return empresa ? empresa.nomeFantasia : "N/A";
+      }
+
+      // Renderizar tabela
+      function renderTable() {
+        if (usuarios.length === 0) {
+          usuariosBody.innerHTML =
+            '<tr><td colspan="8" class="empty-state">Nenhum usuário cadastrado</td></tr>';
+          return;
         }
 
-        // Fetch usuarios
-        async function fetchUsuarios() {
-            try {
-                const response = await fetch(API_URL, {
-                    headers: { 'Authorization': AUTH_TOKEN }
-                });
-                if (!response.ok) throw new Error('Erro ao carregar usuários');
-                usuarios = await response.json();
-                renderTable();
-            } catch (error) {
-                console.error('Erro:', error);
-                usuariosBody.innerHTML = '<tr><td colspan="8" class="empty-state">Erro ao carregar usuários</td></tr>';
-            }
-        }
-
-        // Formatar CPF
-        cpfInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length <= 11) {
-                value = value.replace(/(\d{3})(\d)/, '$1.$2');
-                value = value.replace(/(\d{3})(\d)/, '$1.$2');
-                value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-                e.target.value = value;
-            }
-        });
-
-        // Formatar Telefone
-        telefoneInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length <= 11) {
-                value = value.replace(/(\d{2})(\d)/, '($1) $2');
-                value = value.replace(/(\d{5})(\d)/, '$1-$2');
-                e.target.value = value;
-            }
-        });
-
-        // Helper functions
-        function formatCPF(cpf) {
-            if (!cpf) return 'Não informado';
-            const cleaned = cpf.toString().replace(/\D/g, '');
-            return cleaned.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-        }
-
-        function formatTelefone(telefone) {
-            if (!telefone) return 'Não informado';
-            const cleaned = telefone.toString().replace(/\D/g, '');
-            return cleaned.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-        }
-
-        function formatDate(date) {
-            if (!date) return 'Não informado';
-            const [year, month, day] = date.split('-');
-            return `${day}/${month}/${year}`;
-        }
-
-        function getEmpresaName(empresaId) {
-            const empresa = empresas.find(e => e.id === empresaId);
-            return empresa ? empresa.nomeFantasia : 'N/A';
-        }
-
-        // Renderizar tabela
-        function renderTable() {
-            if (usuarios.length === 0) {
-                usuariosBody.innerHTML = '<tr><td colspan="8" class="empty-state">Nenhum usuário cadastrado</td></tr>';
-                return;
-            }
-
-            usuariosBody.innerHTML = usuarios.map(usuario => `
+        usuariosBody.innerHTML = usuarios
+          .map(
+            (usuario) => `
                 <tr>
                     <td>${usuario.id}</td>
                     <td>
@@ -204,130 +216,132 @@
                         <button class="btn-delete" onclick="deleteUsuario(${usuario.id})">Excluir</button>
                     </td>
                 </tr>
-            `).join('');
-        }
+            `,
+          )
+          .join("");
+      }
 
-        // Adicionar ou editar usuário
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
+      // Adicionar ou editar usuário
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
 
-            const usuario = {
-                nome: nomeInput.value.trim(),
-                email: emailInput.value.trim(),
-                cpf: cpfInput.value.trim().replace(/\D/g, ''),
-                dataNascimento: dataNascimentoInput.value,
-                telefone: telefoneInput.value.trim().replace(/\D/g, ''),
-                empresa: parseInt(empresaSelect.value)
-            };
+        const usuario = {
+          nome: nomeInput.value.trim(),
+          email: emailInput.value.trim(),
+          cpf: cpfInput.value.trim().replace(/\D/g, ""),
+          dataNascimento: dataNascimentoInput.value,
+          telefone: telefoneInput.value.trim().replace(/\D/g, ""),
+          empresa: parseInt(empresaSelect.value),
+        };
 
-            try {
-                if (editingId) {
-                    const response = await fetch(`${API_URL}/${editingId}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': AUTH_TOKEN
-                        },
-                        body: JSON.stringify(usuario)
-                    });
-                    
-                    if (!response.ok) throw new Error('Erro ao atualizar usuário');
-                    
-                    const index = usuarios.findIndex(u => u.id === editingId);
-                    if (index !== -1) {
-                        usuarios[index] = { ...usuarios[index], ...usuario };
-                    }
-                    
-                    editingId = null;
-                    formTitle.textContent = 'Novo Usuário';
-                    btnCancel.style.display = 'none';
-                } else {
-                    const response = await fetch(API_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': AUTH_TOKEN
-                        },
-                        body: JSON.stringify(usuario)
-                    });
-                    
-                    if (!response.ok) throw new Error('Erro ao criar usuário');
-                    
-                    const novoUsuario = await response.json();
-                    usuarios.push(novoUsuario);
-                }
+        try {
+          if (editingId) {
+            const response = await fetch(`${API_URL}/${editingId}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: AUTH_TOKEN,
+              },
+              body: JSON.stringify(usuario),
+            });
 
-                form.reset();
-                renderTable();
-            } catch (error) {
-                console.error('Erro:', error);
-                alert('Ocorreu um erro ao salvar o usuário');
+            if (!response.ok) throw new Error("Erro ao atualizar usuário");
+
+            const index = usuarios.findIndex((u) => u.id === editingId);
+            if (index !== -1) {
+              usuarios[index] = { ...usuarios[index], ...usuario };
             }
-        });
 
-        // Editar usuário
-        function editUsuario(id) {
-            const usuario = usuarios.find(u => u.id === id);
-            if (usuario) {
-                nomeInput.value = usuario.nome || '';
-                emailInput.value = usuario.email || '';
-                cpfInput.value = formatCPF(usuario.cpf) || '';
-                dataNascimentoInput.value = usuario.dataNascimento || '';
-                telefoneInput.value = formatTelefone(usuario.telefone) || '';
-                empresaSelect.value = usuario.empresa || '';
-                editingId = id;
-                formTitle.textContent = 'Editar Usuário';
-                btnCancel.style.display = 'inline-block';
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        }
-
-        // Cancelar edição
-        btnCancel.addEventListener('click', function() {
-            form.reset();
             editingId = null;
-            formTitle.textContent = 'Novo Usuário';
-            btnCancel.style.display = 'none';
-        });
+            formTitle.textContent = "Novo Usuário";
+            btnCancel.style.display = "none";
+          } else {
+            const response = await fetch(API_URL, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: AUTH_TOKEN,
+              },
+              body: JSON.stringify(usuario),
+            });
 
-        // Excluir usuário
-        async function deleteUsuario(id) {
-            if (!confirm('Tem certeza que deseja excluir este usuário?')) return;
+            if (!response.ok) throw new Error("Erro ao criar usuário");
 
-            try {
-                const response = await fetch(`${API_URL}/${id}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': AUTH_TOKEN }
-                });
-                
-                if (!response.ok) throw new Error('Erro ao excluir usuário');
-                
-                usuarios = usuarios.filter(u => u.id !== id);
-                renderTable();
-            } catch (error) {
-                console.error('Erro:', error);
-                alert('Ocorreu um erro ao excluir o usuário');
-            }
+            const novoUsuario = await response.json();
+            usuarios.push(novoUsuario);
+          }
+
+          form.reset();
+          renderTable();
+        } catch (error) {
+          console.error("Erro:", error);
+          alert("Ocorreu um erro ao salvar o usuário");
         }
+      });
 
-        // Inicializar
-        async function init() {
-            await fetchEmpresas();
-            await fetchUsuarios();
-            
-            // Check if there's an edit parameter in URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const editId = urlParams.get('edit');
-            
-            if (editId) {
-                // Wait a bit for data to load
-                setTimeout(() => {
-                    editUsuario(parseInt(editId));
-                }, 500);
-            }
+      // Editar usuário
+      function editUsuario(id) {
+        const usuario = usuarios.find((u) => u.id === id);
+        if (usuario) {
+          nomeInput.value = usuario.nome || "";
+          emailInput.value = usuario.email || "";
+          cpfInput.value = formatCPF(usuario.cpf) || "";
+          dataNascimentoInput.value = usuario.dataNascimento || "";
+          telefoneInput.value = formatTelefone(usuario.telefone) || "";
+          empresaSelect.value = usuario.empresa || "";
+          editingId = id;
+          formTitle.textContent = "Editar Usuário";
+          btnCancel.style.display = "inline-block";
+          window.scrollTo({ top: 0, behavior: "smooth" });
         }
+      }
 
-        init();
+      // Cancelar edição
+      btnCancel.addEventListener("click", function () {
+        form.reset();
+        editingId = null;
+        formTitle.textContent = "Novo Usuário";
+        btnCancel.style.display = "none";
+      });
+
+      // Excluir usuário
+      async function deleteUsuario(id) {
+        if (!confirm("Tem certeza que deseja excluir este usuário?")) return;
+
+        try {
+          const response = await fetch(`${API_URL}/${id}`, {
+            method: "DELETE",
+            headers: { Authorization: AUTH_TOKEN },
+          });
+
+          if (!response.ok) throw new Error("Erro ao excluir usuário");
+
+          usuarios = usuarios.filter((u) => u.id !== id);
+          renderTable();
+        } catch (error) {
+          console.error("Erro:", error);
+          alert("Ocorreu um erro ao excluir o usuário");
+        }
+      }
+
+      // Inicializar
+      async function init() {
+        await fetchEmpresas();
+        await fetchUsuarios();
+
+        // Check if there's an edit parameter in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const editId = urlParams.get("edit");
+
+        if (editId) {
+          // Wait a bit for data to load
+          setTimeout(() => {
+            editUsuario(parseInt(editId));
+          }, 500);
+        }
+      }
+
+      init();
     </script>
-</body>
+  </body>
 </html>

@@ -1,41 +1,34 @@
 <script>
 	import { fade, scale } from 'svelte/transition';
-	import dismissable from '$lib/actions/dismissable';
+	import dismissable from '$lib/utils/dismissable';
 
-	let { isOpen = $bindable(true), title, onClose, children } = $props();
-
-	function closeModal() {
-		isOpen = false;
-		onClose?.();
-	}
+	let { title, onClose, children } = $props();
 </script>
 
-{#if isOpen}
+<div
+	class="modal-overlay"
+	transition:fade={{ duration: 300 }}
+>
 	<div
-		class="modal-overlay"
-		transition:fade={{ duration: 300 }}
+		class="modal"
+		role="dialog"
+		aria-modal="true"
+		aria-labelledby="modal-title"
+		use:dismissable={{ active: true }}
+		ondismiss={onClose}
+		transition:scale={{ duration: 300, start: 0.8 }}
 	>
-		<div
-			class="modal"
-			role="dialog"
-			aria-modal="true"
-			aria-labelledby="modal-title"
-			use:dismissable={{ active: isOpen }}
-			ondismiss={closeModal}
-			transition:scale={{ duration: 300, start: 0.8 }}
-		>
-			<div class="modal-header">
-				<h2 id="modal-title">{title}</h2>
-				<button aria-label="Fechar modal" class="close-btn" onclick={closeModal}>
-					<i class="fas fa-times" aria-hidden="true"></i>
-				</button>
-			</div>
-			<div class="modal-content">
-				{@render children()}
-			</div>
+		<div class="modal-header">
+			<h2 id="modal-title">{title}</h2>
+			<button aria-label="Fechar modal" class="close-btn" onclick={onClose}>
+				<i class="fas fa-times" aria-hidden="true"></i>
+			</button>
+		</div>
+		<div class="modal-content">
+			{@render children()}
 		</div>
 	</div>
-{/if}
+</div>
 
 <style>
 	.modal-overlay {

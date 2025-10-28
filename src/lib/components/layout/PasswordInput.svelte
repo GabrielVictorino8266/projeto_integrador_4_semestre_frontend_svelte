@@ -5,16 +5,9 @@
   import { slide } from "svelte/transition";
   
   let {
-    id,
-    name,
-    label,
-    placeholder = '',
-    required = false,
     value = $bindable(''),
     showStrength = false,
-    hint,
-    error,
-    onblur,
+    ...props
   } = $props();
 
   let strength = $derived.by(() => {
@@ -29,15 +22,9 @@
 
 <Input
   type="password"
-  {id}
-  {name}
-  {label}
-  {hint}
-  {error}
-  {placeholder}
-  {required}
+  autocomplete="new-password"
   bind:value
-  {onblur}
+  {...props}
 >
   {#if showStrength && value}
     <div class="password-strength" transition:slide={{ duration: 100 }}>

@@ -1,5 +1,6 @@
 <script>
   import { goto } from '$app/navigation';
+  import { resolve } from '$app/paths';
 
   let selectedPlan = null;
   
@@ -88,7 +89,7 @@
   
   function selectPlan(plan) {
     selectedPlan = plan;
-    goto('/login');
+    goto(resolve('/login'));
   }
   
     function scrollToPricing() {

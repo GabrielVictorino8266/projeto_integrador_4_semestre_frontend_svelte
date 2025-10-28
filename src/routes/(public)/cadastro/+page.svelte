@@ -1,11 +1,13 @@
 <script>
-  import { toastState } from "$lib/state/toast.svelte.js";
+  import '$lib/assets/cadastro.css';
+
+  import { toastState } from "$lib/stores/toast.svelte.js";
   import { goto } from "$app/navigation";
   import { deserialize } from "$app/forms";
   import { logger } from "$lib/utils/logger";
 
-  import { StepProgress } from "$lib/components/registration";
-  import Toaster from "$lib/components/ui/Toaster.svelte";
+  import StepProgress from "$lib/components/StepProgress.svelte";
+  import Toaster from "$lib/components/layout/Toaster.svelte";
 
   import {
     PageHeader,
@@ -15,7 +17,7 @@
     FormRow,
     ButtonGroup,
     Button,
-  } from "$lib/components/ui";
+  } from "$lib/components/layout";
 
   import {
     validarCNPJ,
@@ -165,9 +167,9 @@
       if (result.type === "success") {
         toastState.success(
           "Cadastro concluído com sucesso! Você será redirecionado em instantes...",
-          3000,
+          2000,
         );
-        await new Promise((resolve) => setTimeout(resolve, 3000));
+        await new Promise((resolve) => setTimeout(resolve, 2000));
         goto(result.data.redirect);
       } else {
         toastState.error(result.error.message, 6000);
@@ -382,74 +384,3 @@
     </footer>
   </Card>
 </div>
-
-<style>
-  @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css";
-
-  :global(body) {
-    margin: 0;
-    padding: 0;
-    font-family:
-      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
-      Cantarell, sans-serif;
-    background-color: #0a1628;
-    /* overflow: hidden; */
-  }
-
-  .page-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    padding: 10px;
-  }
-
-  .section-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: white;
-    margin-bottom: 18px;
-    text-align: center;
-  }
-
-  .login-link {
-    text-align: center;
-    margin-top: 15px;
-    font-size: 13px;
-    color: #8b9cb6;
-  }
-
-  .login-link a {
-    color: #3b82f6;
-    text-decoration: none;
-    transition: color 0.3s;
-  }
-
-  .login-link a:hover {
-    color: #60a5fa;
-    text-decoration: underline;
-  }
-
-  footer {
-    margin-top: 15px;
-    text-align: center;
-    font-size: 11px;
-    color: #4a5f7f;
-  }
-
-  /* Form animations */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .fade-in {
-    animation: fadeIn 0.4s ease;
-  }
-</style>

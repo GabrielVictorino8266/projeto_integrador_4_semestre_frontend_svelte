@@ -1,116 +1,127 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gerenciador de Empresas</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <div class="container">
-        <div class="header">
-            <h1>📊 Gerenciador de Empresas</h1>
-            <p>Cadastre e gerencie suas empresas</p>
-        </div>
+      <div class="header">
+        <h1>📊 Gerenciador de Empresas</h1>
+        <p>Cadastre e gerencie suas empresas</p>
+      </div>
 
-        <div class="form-section">
-            <h2 style="margin-bottom: 20px; color: #333;">
-                <span id="formTitle">Nova Empresa</span>
-            </h2>
-            <form id="empresaForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="razaoSocial">Razão Social *</label>
-                        <input type="text" id="razaoSocial" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="nomeFantasia">Nome Fantasia *</label>
-                        <input type="text" id="nomeFantasia" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="cnpj">CNPJ *</label>
-                        <input type="text" id="cnpj" maxlength="18" required>
-                    </div>
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-                    <button type="button" class="btn btn-secondary" id="btnCancel" style="display: none;">Cancelar</button>
-                </div>
-            </form>
-        </div>
-
-        <div class="table-section">
-            <div class="table-header">
-                <h2>Lista de Empresas</h2>
+      <div class="form-section">
+        <h2 style="margin-bottom: 20px; color: #333">
+          <span id="formTitle">Nova Empresa</span>
+        </h2>
+        <form id="empresaForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="razaoSocial">Razão Social *</label>
+              <input type="text" id="razaoSocial" required />
             </div>
-            <table id="empresasTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Razão Social</th>
-                        <th>Nome Fantasia</th>
-                        <th>CNPJ</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="empresasBody">
-                </tbody>
-            </table>
+            <div class="form-group">
+              <label for="nomeFantasia">Nome Fantasia *</label>
+              <input type="text" id="nomeFantasia" required />
+            </div>
+            <div class="form-group">
+              <label for="cnpj">CNPJ *</label>
+              <input type="text" id="cnpj" maxlength="18" required />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="btnCancel"
+              style="display: none"
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="table-section">
+        <div class="table-header">
+          <h2>Lista de Empresas</h2>
         </div>
+        <table id="empresasTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Razão Social</th>
+              <th>Nome Fantasia</th>
+              <th>CNPJ</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="empresasBody"></tbody>
+        </table>
+      </div>
     </div>
 
-   <script>
-    const API_BASE_URL ='http://localhost:7777/api';
-    const API_URL = 'http://localhost:7777/api/empresas';
-    let empresas = [];
-    let editingId = null;
+    <script>
+      const API_BASE_URL = "http://localhost:7777/api";
+      const API_URL = "http://localhost:7777/api/empresas";
+      let empresas = [];
+      let editingId = null;
 
-    const form = document.getElementById('empresaForm');
-    const razaoSocialInput = document.getElementById('razaoSocial');
-    const nomeFantasiaInput = document.getElementById('nomeFantasia');
-    const cnpjInput = document.getElementById('cnpj');
-    const empresasBody = document.getElementById('empresasBody');
-    const formTitle = document.getElementById('formTitle');
-    const btnCancel = document.getElementById('btnCancel');
+      const form = document.getElementById("empresaForm");
+      const razaoSocialInput = document.getElementById("razaoSocial");
+      const nomeFantasiaInput = document.getElementById("nomeFantasia");
+      const cnpjInput = document.getElementById("cnpj");
+      const empresasBody = document.getElementById("empresasBody");
+      const formTitle = document.getElementById("formTitle");
+      const btnCancel = document.getElementById("btnCancel");
 
-    // Fetch all empresas
-    async function fetchEmpresas() {
+      // Fetch all empresas
+      async function fetchEmpresas() {
         try {
-            const response = await fetch(API_URL, {
-                headers: {
-                    'Authorization': 'Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktand0Iiwic3ViIjoiMTIzNDU2Nzg5MDEiLCJleHAiOjE3NjA4MTczMzQsImlhdCI6MTc2MDgxMzczNCwic2NvcGUiOiJST0xFX0FETUlOIn0.oNpgPw8aUCkvGThi1SLGiCOJsi4Yu2dyp9lPoWwSP9oS4Q-naEsYe7hF4AVTlzF1N0czDru_IdZbQraM-FGXW0mLqVzOT6QgYpbfaMdfLNvtZS1xf8w87eoT8JNsY0z986SKAybpMO4JUKiPYEoFa7r5mxkmKYljFBVpnQiXOH29WeEHv2dR-vfSYKjwFI-lIOA1sPMCARNyBJNTm2CZaGdcgAZ8rO4jUn4En7GonWmLFsXXKdHOpmJ12_VeLWJV2WiLr6h7CndAdONQA1HhFD6Gf7ZNGVjEPNjCoStgZnSyxEYvxxaAlYfpJA2JBFZK1j8ErDa7fezZVW09cEPaxw'
-                }
-            });
-            if (!response.ok) throw new Error('Erro ao carregar empresas');
-            empresas = await response.json();
-            renderTable();
+          const response = await fetch(API_URL, {
+            headers: {
+              Authorization:
+                "Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktand0Iiwic3ViIjoiMTIzNDU2Nzg5MDEiLCJleHAiOjE3NjA4MTczMzQsImlhdCI6MTc2MDgxMzczNCwic2NvcGUiOiJST0xFX0FETUlOIn0.oNpgPw8aUCkvGThi1SLGiCOJsi4Yu2dyp9lPoWwSP9oS4Q-naEsYe7hF4AVTlzF1N0czDru_IdZbQraM-FGXW0mLqVzOT6QgYpbfaMdfLNvtZS1xf8w87eoT8JNsY0z986SKAybpMO4JUKiPYEoFa7r5mxkmKYljFBVpnQiXOH29WeEHv2dR-vfSYKjwFI-lIOA1sPMCARNyBJNTm2CZaGdcgAZ8rO4jUn4En7GonWmLFsXXKdHOpmJ12_VeLWJV2WiLr6h7CndAdONQA1HhFD6Gf7ZNGVjEPNjCoStgZnSyxEYvxxaAlYfpJA2JBFZK1j8ErDa7fezZVW09cEPaxw",
+            },
+          });
+          if (!response.ok) throw new Error("Erro ao carregar empresas");
+          empresas = await response.json();
+          renderTable();
         } catch (error) {
-            console.error('Erro:', error);
-            empresasBody.innerHTML = '<tr><td colspan="5" class="empty-state">Erro ao carregar empresas</td></tr>';
+          console.error("Erro:", error);
+          empresasBody.innerHTML =
+            '<tr><td colspan="5" class="empty-state">Erro ao carregar empresas</td></tr>';
         }
-    }
+      }
 
-    // Formatar CNPJ
-    cnpjInput.addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
+      // Formatar CNPJ
+      cnpjInput.addEventListener("input", function (e) {
+        let value = e.target.value.replace(/\D/g, "");
         if (value.length <= 14) {
-            value = value.replace(/^(\d{2})(\d)/, '$1.$2');
-            value = value.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
-            value = value.replace(/\.(\d{3})(\d)/, '.$1/$2');
-            value = value.replace(/(\d{4})(\d)/, '$1-$2');
-            e.target.value = value;
+          value = value.replace(/^(\d{2})(\d)/, "$1.$2");
+          value = value.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+          value = value.replace(/\.(\d{3})(\d)/, ".$1/$2");
+          value = value.replace(/(\d{4})(\d)/, "$1-$2");
+          e.target.value = value;
         }
-    });
+      });
 
-    // Renderizar tabela
-        // In the renderTable function, update the company name cell to be clickable
-    function renderTable() {
+      // Renderizar tabela
+      // In the renderTable function, update the company name cell to be clickable
+      function renderTable() {
         if (empresas.length === 0) {
-            empresasBody.innerHTML = '<tr><td colspan="5" class="empty-state">Nenhuma empresa cadastrada</td></tr>';
-            return;
+          empresasBody.innerHTML =
+            '<tr><td colspan="5" class="empty-state">Nenhuma empresa cadastrada</td></tr>';
+          return;
         }
 
-        empresasBody.innerHTML = empresas.map(empresa => `
+        empresasBody.innerHTML = empresas
+          .map(
+            (empresa) => `
             <tr>
                 <td>${empresa.id}</td>
                 <td>
@@ -125,122 +136,127 @@
                     <button class="btn-delete" onclick="deleteEmpresa(${empresa.id})">Excluir</button>
                 </td>
             </tr>
-        `).join('');
-    }
+        `,
+          )
+          .join("");
+      }
 
-    // Add this helper function to format CNPJ
-    function formatCNPJ(cnpj) {
-        if (!cnpj) return 'Não informado';
-        const cleaned = cnpj.toString().replace(/\D/g, '');
+      // Add this helper function to format CNPJ
+      function formatCNPJ(cnpj) {
+        if (!cnpj) return "Não informado";
+        const cleaned = cnpj.toString().replace(/\D/g, "");
         return cleaned.replace(
-            /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,
-            '$1.$2.$3/$4-$5'
+          /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,
+          "$1.$2.$3/$4-$5",
         );
-    }
+      }
 
-    // Adicionar ou editar empresa
-    form.addEventListener('submit', async function(e) {
+      // Adicionar ou editar empresa
+      form.addEventListener("submit", async function (e) {
         e.preventDefault();
 
         const empresa = {
-            razaoSocial: razaoSocialInput.value.trim(),
-            nomeFantasia: nomeFantasiaInput.value.trim(),
-            cnpj: cnpjInput.value.trim().replace(/\D/g, '')
+          razaoSocial: razaoSocialInput.value.trim(),
+          nomeFantasia: nomeFantasiaInput.value.trim(),
+          cnpj: cnpjInput.value.trim().replace(/\D/g, ""),
         };
 
         try {
-            if (editingId) {
-                // Atualizar empresa existente
-                const response = await fetch(`${API_URL}/${editingId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktand0Iiwic3ViIjoiMTIzNDU2Nzg5MDEiLCJleHAiOjE3NjA4MTczMzQsImlhdCI6MTc2MDgxMzczNCwic2NvcGUiOiJST0xFX0FETUlOIn0.oNpgPw8aUCkvGThi1SLGiCOJsi4Yu2dyp9lPoWwSP9oS4Q-naEsYe7hF4AVTlzF1N0czDru_IdZbQraM-FGXW0mLqVzOT6QgYpbfaMdfLNvtZS1xf8w87eoT8JNsY0z986SKAybpMO4JUKiPYEoFa7r5mxkmKYljFBVpnQiXOH29WeEHv2dR-vfSYKjwFI-lIOA1sPMCARNyBJNTm2CZaGdcgAZ8rO4jUn4En7GonWmLFsXXKdHOpmJ12_VeLWJV2WiLr6h7CndAdONQA1HhFD6Gf7ZNGVjEPNjCoStgZnSyxEYvxxaAlYfpJA2JBFZK1j8ErDa7fezZVW09cEPaxw'
-                    },
-                    body: JSON.stringify(empresa)
-                });
-                
-                if (!response.ok) throw new Error('Erro ao atualizar empresa');
-                
-                const index = empresas.findIndex(e => e.id === editingId);
-                if (index !== -1) {
-                    empresas[index] = { ...empresas[index], ...empresa };
-                }
-                
-                editingId = null;
-                formTitle.textContent = 'Nova Empresa';
-                btnCancel.style.display = 'none';
-            } else {
-                // Criar nova empresa
-                const response = await fetch(API_BASE_URL+'/empresas', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                         'Authorization': 'Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktand0Iiwic3ViIjoiMTIzNDU2Nzg5MDEiLCJleHAiOjE3NjA4MTczMzQsImlhdCI6MTc2MDgxMzczNCwic2NvcGUiOiJST0xFX0FETUlOIn0.oNpgPw8aUCkvGThi1SLGiCOJsi4Yu2dyp9lPoWwSP9oS4Q-naEsYe7hF4AVTlzF1N0czDru_IdZbQraM-FGXW0mLqVzOT6QgYpbfaMdfLNvtZS1xf8w87eoT8JNsY0z986SKAybpMO4JUKiPYEoFa7r5mxkmKYljFBVpnQiXOH29WeEHv2dR-vfSYKjwFI-lIOA1sPMCARNyBJNTm2CZaGdcgAZ8rO4jUn4En7GonWmLFsXXKdHOpmJ12_VeLWJV2WiLr6h7CndAdONQA1HhFD6Gf7ZNGVjEPNjCoStgZnSyxEYvxxaAlYfpJA2JBFZK1j8ErDa7fezZVW09cEPaxw'
-                    },
-                    body: JSON.stringify(empresa)
-                });
-                
-                if (!response.ok) throw new Error('Erro ao criar empresa');
-                
-                const novaEmpresa = await response.json();
-                empresas.push(novaEmpresa);
+          if (editingId) {
+            // Atualizar empresa existente
+            const response = await fetch(`${API_URL}/${editingId}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization:
+                  "Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktand0Iiwic3ViIjoiMTIzNDU2Nzg5MDEiLCJleHAiOjE3NjA4MTczMzQsImlhdCI6MTc2MDgxMzczNCwic2NvcGUiOiJST0xFX0FETUlOIn0.oNpgPw8aUCkvGThi1SLGiCOJsi4Yu2dyp9lPoWwSP9oS4Q-naEsYe7hF4AVTlzF1N0czDru_IdZbQraM-FGXW0mLqVzOT6QgYpbfaMdfLNvtZS1xf8w87eoT8JNsY0z986SKAybpMO4JUKiPYEoFa7r5mxkmKYljFBVpnQiXOH29WeEHv2dR-vfSYKjwFI-lIOA1sPMCARNyBJNTm2CZaGdcgAZ8rO4jUn4En7GonWmLFsXXKdHOpmJ12_VeLWJV2WiLr6h7CndAdONQA1HhFD6Gf7ZNGVjEPNjCoStgZnSyxEYvxxaAlYfpJA2JBFZK1j8ErDa7fezZVW09cEPaxw",
+              },
+              body: JSON.stringify(empresa),
+            });
+
+            if (!response.ok) throw new Error("Erro ao atualizar empresa");
+
+            const index = empresas.findIndex((e) => e.id === editingId);
+            if (index !== -1) {
+              empresas[index] = { ...empresas[index], ...empresa };
             }
 
-            form.reset();
-            renderTable();
+            editingId = null;
+            formTitle.textContent = "Nova Empresa";
+            btnCancel.style.display = "none";
+          } else {
+            // Criar nova empresa
+            const response = await fetch(API_BASE_URL + "/empresas", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization:
+                  "Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktand0Iiwic3ViIjoiMTIzNDU2Nzg5MDEiLCJleHAiOjE3NjA4MTczMzQsImlhdCI6MTc2MDgxMzczNCwic2NvcGUiOiJST0xFX0FETUlOIn0.oNpgPw8aUCkvGThi1SLGiCOJsi4Yu2dyp9lPoWwSP9oS4Q-naEsYe7hF4AVTlzF1N0czDru_IdZbQraM-FGXW0mLqVzOT6QgYpbfaMdfLNvtZS1xf8w87eoT8JNsY0z986SKAybpMO4JUKiPYEoFa7r5mxkmKYljFBVpnQiXOH29WeEHv2dR-vfSYKjwFI-lIOA1sPMCARNyBJNTm2CZaGdcgAZ8rO4jUn4En7GonWmLFsXXKdHOpmJ12_VeLWJV2WiLr6h7CndAdONQA1HhFD6Gf7ZNGVjEPNjCoStgZnSyxEYvxxaAlYfpJA2JBFZK1j8ErDa7fezZVW09cEPaxw",
+              },
+              body: JSON.stringify(empresa),
+            });
+
+            if (!response.ok) throw new Error("Erro ao criar empresa");
+
+            const novaEmpresa = await response.json();
+            empresas.push(novaEmpresa);
+          }
+
+          form.reset();
+          renderTable();
         } catch (error) {
-            console.error('Erro:', error);
-            alert('Ocorreu um erro ao salvar a empresa');
+          console.error("Erro:", error);
+          alert("Ocorreu um erro ao salvar a empresa");
         }
-    });
+      });
 
-    // Editar empresa
-    function editEmpresa(id) {
-        const empresa = empresas.find(e => e.id === id);
+      // Editar empresa
+      function editEmpresa(id) {
+        const empresa = empresas.find((e) => e.id === id);
         if (empresa) {
-            razaoSocialInput.value = empresa.razaoSocial || '';
-            nomeFantasiaInput.value = empresa.nomeFantasia || '';
-            cnpjInput.value = empresa.cnpj || '';
-            editingId = id;
-            formTitle.textContent = 'Editar Empresa';
-            btnCancel.style.display = 'inline-block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+          razaoSocialInput.value = empresa.razaoSocial || "";
+          nomeFantasiaInput.value = empresa.nomeFantasia || "";
+          cnpjInput.value = empresa.cnpj || "";
+          editingId = id;
+          formTitle.textContent = "Editar Empresa";
+          btnCancel.style.display = "inline-block";
+          window.scrollTo({ top: 0, behavior: "smooth" });
         }
-    }
+      }
 
-    // Cancelar edição
-    btnCancel.addEventListener('click', function() {
+      // Cancelar edição
+      btnCancel.addEventListener("click", function () {
         form.reset();
         editingId = null;
-        formTitle.textContent = 'Nova Empresa';
-        btnCancel.style.display = 'none';
-    });
+        formTitle.textContent = "Nova Empresa";
+        btnCancel.style.display = "none";
+      });
 
-    // Excluir empresa
-    async function deleteEmpresa(id) {
-        if (!confirm('Tem certeza que deseja excluir esta empresa?')) return;
+      // Excluir empresa
+      async function deleteEmpresa(id) {
+        if (!confirm("Tem certeza que deseja excluir esta empresa?")) return;
 
         try {
-            const response = await fetch(`${API_URL}/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': 'Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktand0Iiwic3ViIjoiMTIzNDU2Nzg5MDEiLCJleHAiOjE3NjA4MTczMzQsImlhdCI6MTc2MDgxMzczNCwic2NvcGUiOiJST0xFX0FETUlOIn0.oNpgPw8aUCkvGThi1SLGiCOJsi4Yu2dyp9lPoWwSP9oS4Q-naEsYe7hF4AVTlzF1N0czDru_IdZbQraM-FGXW0mLqVzOT6QgYpbfaMdfLNvtZS1xf8w87eoT8JNsY0z986SKAybpMO4JUKiPYEoFa7r5mxkmKYljFBVpnQiXOH29WeEHv2dR-vfSYKjwFI-lIOA1sPMCARNyBJNTm2CZaGdcgAZ8rO4jUn4En7GonWmLFsXXKdHOpmJ12_VeLWJV2WiLr6h7CndAdONQA1HhFD6Gf7ZNGVjEPNjCoStgZnSyxEYvxxaAlYfpJA2JBFZK1j8ErDa7fezZVW09cEPaxw'
-                }
-            });
-            
-            if (!response.ok) throw new Error('Erro ao excluir empresa');
-            
-            empresas = empresas.filter(e => e.id !== id);
-            renderTable();
-        } catch (error) {
-            console.error('Erro:', error);
-            alert('Ocorreu um erro ao excluir a empresa');
-        }
-    }
+          const response = await fetch(`${API_URL}/${id}`, {
+            method: "DELETE",
+            headers: {
+              Authorization:
+                "Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktand0Iiwic3ViIjoiMTIzNDU2Nzg5MDEiLCJleHAiOjE3NjA4MTczMzQsImlhdCI6MTc2MDgxMzczNCwic2NvcGUiOiJST0xFX0FETUlOIn0.oNpgPw8aUCkvGThi1SLGiCOJsi4Yu2dyp9lPoWwSP9oS4Q-naEsYe7hF4AVTlzF1N0czDru_IdZbQraM-FGXW0mLqVzOT6QgYpbfaMdfLNvtZS1xf8w87eoT8JNsY0z986SKAybpMO4JUKiPYEoFa7r5mxkmKYljFBVpnQiXOH29WeEHv2dR-vfSYKjwFI-lIOA1sPMCARNyBJNTm2CZaGdcgAZ8rO4jUn4En7GonWmLFsXXKdHOpmJ12_VeLWJV2WiLr6h7CndAdONQA1HhFD6Gf7ZNGVjEPNjCoStgZnSyxEYvxxaAlYfpJA2JBFZK1j8ErDa7fezZVW09cEPaxw",
+            },
+          });
 
-    // Inicializar
-    fetchEmpresas();
-</script>
-</body>
+          if (!response.ok) throw new Error("Erro ao excluir empresa");
+
+          empresas = empresas.filter((e) => e.id !== id);
+          renderTable();
+        } catch (error) {
+          console.error("Erro:", error);
+          alert("Ocorreu um erro ao excluir a empresa");
+        }
+      }
+
+      // Inicializar
+      fetchEmpresas();
+    </script>
+  </body>
 </html>
