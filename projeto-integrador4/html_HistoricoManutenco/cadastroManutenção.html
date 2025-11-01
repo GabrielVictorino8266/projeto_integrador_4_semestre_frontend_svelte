@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="style2.css">
+</head>
+
+<style>
+.main-content {
+  margin-left: 260px; /* manter sidebar */
+  flex: 1;
+  padding: 2rem;
+  width: calc(100% - 260px);
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centraliza horizontalmente */
+}
+</style>
+
+<body>
+        <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo"><i class="fas fa-car"></i> VeiculosApp</div>
+        <ul class="nav-menu">
+            <li class="nav-item active">
+                <i class="nav-icon fas fa-chart-line"></i>
+                Dashboard
+            </li>
+            <li class="nav-item">
+                <i class="nav-icon fas fa-truck-pickup"></i>
+                Veículos
+            </li>
+            <li class="nav-item">
+                <i class="nav-icon fas fa-users"></i>
+                Motoristas
+            </li>
+            <li class="nav-item">
+                <i class="nav-icon fas fa-wrench"></i>
+                Manutenção
+            </li>
+            <li class="nav-item">
+                <i class="nav-icon fas fa-chart-pie"></i>
+                Relatórios
+            </li>
+            <li class="nav-item">
+                <i class="nav-icon fas fa-cog"></i>
+                Configurações
+            </li>
+        </ul>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main-content">
+      <h1>Registro de Manutenção</h1>
+
+      <form class="form-manutencao">
+        <div class="linha">
+          <div class="campo">
+            <label>Data</label>
+            <input type="date" name="data">
+          </div>
+
+          <div class="campo">
+            <label>Veículo</label>
+            <input type="text" name="veiculo" placeholder="Digite a placa do veículo">
+          </div>
+
+          <div class="campo">
+            <label> Quilometragem</label>
+            <input type="text" name="Quilometragem" placeholder="Digite o Km do veiculo">
+          </div>
+        </div>
+
+        <div class="linha">
+          <div class="campo">
+            <label>Valor</label>
+            <input type="text" name="valor" placeholder="Digite o valor">
+          </div>
+
+          <div class="campo">
+            <label>Oficina/Local</label>
+            <input type="text" name="oficina">
+          </div>
+
+          <div class="campo">
+            <label>Tipo de Manutenção</label>
+            <select name="tipo">
+              <option value="">Selecione o tipo</option>
+              <option value="preventiva">Preventiva</option>
+              <option value="corretiva">Corretiva</option>
+              <option value="outros">Outros</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="campo full">
+          <label>Descrição do Serviço</label>
+          <textarea name="descricao"></textarea>
+        </div>
+
+        <div class="campo full">
+          <label>Previsão próxima Manutenção</label>
+          <input type="text" name="proxima" placeholder="Ex: 3 meses ou 10.000Km">
+        </div>
+
+        <div class="campo full">
+        <label>Nota fiscal/Comprovantes</label>
+        <div class="area-upload" id="areaUpload">
+            <input type="file" id="anexo" name="anexo" accept=".pdf,image/*">
+            <span id="textoUpload">Anexe seu arquivo aqui</span>
+        </div>
+    </div>
+
+
+        <button type="submit" class="btn-confirmar">Confirmar</button>
+      </form>
+    </main>
+  </div>
+</body>
+</html>
