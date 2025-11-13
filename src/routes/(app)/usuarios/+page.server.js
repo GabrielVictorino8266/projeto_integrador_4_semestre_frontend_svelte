@@ -46,6 +46,7 @@ const saveMotorista = async (formData, token) => {
   // Validate both schemas first
   const userValidation = UpsertUserSchema.safeParse(formData);
   const motoristaData = {
+    id: formData.motoristaId,
     nomeMotorista: formData.nome,
     tipoCnh: formData.tipoCnh,
     numeroCnh: formData.cnh,
@@ -76,13 +77,15 @@ const saveMotorista = async (formData, token) => {
   motoristaValidation.data.usuarioId = userResult.item.id;
 
   const motoristaSvc = motoristaService(token);
-  const motoristaResult = motoristaValidation.data.id
-    ? await motoristaSvc.update(motoristaValidation.data)
-    : await motoristaSvc.create(motoristaValidation.data);
+  if (!motoristaValidation.data.id) {
+    const motoristaResult = await motoristaSvc.create(motoristaValidation.data);
+    if (motoristaResult.error) {
+      return fail(500, { error: motoristaResult.error });
+    }
+    return { user: userResult.item, motorista: motoristaResult.item };
+  }
 
-  return motoristaResult.error
-    ? fail(500, { error: motoristaResult.error })
-    : { user: userResult.item, motorista: motoristaResult.item };
+  return { user: userResult.item, motorista: null };
 };
 
 const deleteAdmin = async (id, token) => {

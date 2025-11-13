@@ -28,11 +28,11 @@
     ];
 
     let formData = $state({
-        funcao: user?.role ?? "ADMIN",
+        funcao: user?.motorista ? "MOTORISTA" : "ADMIN",
         nome: user?.nome ?? "",
         cpf: user?.cpf ?? "",
-        numeroCnh: user?.numeroCnh ?? "",
-        tipoCnh: user?.tipoCnh ?? "A",
+        numeroCnh: user?.motorista?.numeroCnh ?? "",
+        tipoCnh: user?.motorista?.tipoCnh ?? "A",
         email: user?.email ?? "",
         telefone: user?.telefone ?? "",
         dataNascimento: user?.dataNascimento ?? "",
@@ -112,6 +112,7 @@
     >
         {#if user?.id}
             <input type="hidden" name="id" value={user.id} />
+            <input type="hidden" name="motoristaId" value={user.motorista?.id} />
         {/if}
 
         <div class="form-fields">

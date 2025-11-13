@@ -2,6 +2,7 @@
 import { ApiService } from "./service";
 
 const mapper = (user) => ({
+  id: user.id,
   nomeMotorista: user.nomeMotorista,
   tipoCnh: user.tipoCnh,
   numeroCnh: user.numeroCnh,

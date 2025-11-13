@@ -29,13 +29,23 @@ export class ApiService {
       const url = `/${this.endpoint}?${query.toString()}`;
       const data = await this.apiClient.get(url);
 
+      let items = data;
+      if (items?.content?.length > 0) {
+        items = items.content.map(this.mapper);
+      } else if (items?.data?.length > 0) {
+        items = items.data.map(this.mapper);
+      } else if (items?.length > 0) {
+        items = items.map(this.mapper);
+      }
+
       return {
-        items: (data?.content || data || []).map(this.mapper),
+        items,
         pagination: {
           currentPage: data?.pageable?.pageNumber || 0,
           itemsPerPage: data?.pageable?.pageSize || 10,
           totalPages: data?.totalPages || 1,
           totalItems: data?.totalElements || 0,
+          ...(data?.pagination || {}),
         },
       };
     } catch (error) {

@@ -9,6 +9,7 @@
   import Modal from "$lib/components/layout/Modal.svelte";
   import DataTable from "$lib/components/layout/DataTable.svelte";
   import Button from "$lib/components/layout/Button.svelte";
+  import PlanLimitIndicator from "$lib/components/PlanLimitIndicator.svelte";
 
   // Keep this store — it's doing heavy lifting
   import { createDataTableStore } from "$lib/stores/dataTable.svelte.js";
@@ -37,6 +38,8 @@
   let isEditMode = $state(false);
 
   const placaMask = new Mask({ mask: "AAA-#*##" }); // Brazilian plate format
+  const currentUser = $state(data?.session?.user);
+  const isAdmin = $derived(currentUser?.role === "ADMIN");
 
   // === Helpers ===
   const formatKm = (km) => {
@@ -155,6 +158,15 @@
   </Modal>
 {/if}
 
+{#if isAdmin}
+  <PlanLimitIndicator 
+    limit={5} 
+    used={vehiclesTable.state.totalItems} 
+    message="veículos registrados" 
+  />
+{/if}
+
+
 <DataTable
   columns={vehiclesTable.columns}
   items={vehiclesTable.state.items}
@@ -180,9 +192,11 @@
   }}
 >
   {#snippet toolbar()}
-    <Button variant="primary" icon="plus" onclick={handleCreate}>
-      Novo Veículo
-    </Button>
+    {#if isAdmin}
+      <Button variant="primary" icon="plus" onclick={handleCreate}>
+        Novo Veículo
+      </Button>
+    {/if}
   {/snippet}
 
   {#snippet cell_placa(vehicle)} 
@@ -200,6 +214,7 @@
   {/snippet}
 
   {#snippet cell_acoes(vehicle)}
+  {#if isAdmin}
     <div class="btn-group">
       <button aria-label="Editar" class="btn-icon" onclick={() => handleEdit(vehicle)}>
         <i class="fas fa-edit"></i>
@@ -208,6 +223,9 @@
         <i class="fas fa-trash"></i>
       </button>
     </div>
+  {:else}
+    &mdash;
+  {/if}
   {/snippet}
 </DataTable>
 

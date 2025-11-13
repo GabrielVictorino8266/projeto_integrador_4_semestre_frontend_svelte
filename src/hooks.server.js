@@ -16,14 +16,19 @@ export async function handle({ event, resolve }) {
         headers: { Location: "/dashboard" },
       });
     }
-  }
-
+  } 
   // Redireciona usuário não autenticado tentando acessar rotas protegidas
   if (event.route.id?.startsWith("/(app)") && !session?.user) {
-    return new Response(null, {
-      status: 302,
-      headers: { Location: `/login?reason=session_expired&timestamp=${Date.now()}` },
-    });
+    if (event.request.method === "GET") {
+      return new Response(null, {
+        status: 302,
+        headers: { Location: `/login?reason=session_expired&timestamp=${Date.now()}` },
+      });
+    } else {
+      return new Response(null, {
+        status: 401,
+      });
+    }
   }
 
   // Anexa usuário em event.locals se autenticado

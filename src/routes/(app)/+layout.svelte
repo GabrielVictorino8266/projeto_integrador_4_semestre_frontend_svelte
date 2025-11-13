@@ -45,12 +45,6 @@
             <span>Manutenções</span>
           </a>
         </li>
-        <li>
-          <a href={resolve('/relatorios')} class:active={currentPath.startsWith('/relatorios')}>
-            <i class="fa-solid fa-chart-line"></i>
-            <span>Relatórios</span>
-          </a>
-        </li>
       </ul>
 
       <div class="nav-user">
