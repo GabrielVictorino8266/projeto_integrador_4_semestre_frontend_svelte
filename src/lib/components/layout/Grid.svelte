@@ -60,12 +60,6 @@
                     Nenhum registro encontrado
                 </td>
             </tr>
-        {:else}
-            <tr>
-                <td colspan="{columns.length}" class="no-data">
-                    {items.length} registro(s) encontrado(s)
-                </td>
-            </tr>
         {/if}
     </tbody>
 </table>

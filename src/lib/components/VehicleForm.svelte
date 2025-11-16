@@ -47,6 +47,11 @@
         }
     });
 
+    // Transforma a placa para maiúsculo
+    $effect(() => {
+        formData.placa = formData?.placa?.toUpperCase();
+    });
+
     const handleSubmit = async () => {
         isSubmitting = true;
 

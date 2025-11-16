@@ -31,6 +31,7 @@ export async function handle({ event, resolve }) {
     }
   }
 
+
   // Anexa usuário em event.locals se autenticado
   event.locals.user = session?.user;
   event.locals.token = session?.token;

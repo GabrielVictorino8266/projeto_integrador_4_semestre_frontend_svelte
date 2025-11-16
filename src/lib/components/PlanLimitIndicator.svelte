@@ -59,7 +59,7 @@
                     <div
                         class="progress-fill"
                         id="progressFill"
-                        style="width: 100%"
+                        style="width: {percent}%"
                     ></div>
                 </div>
             </div>

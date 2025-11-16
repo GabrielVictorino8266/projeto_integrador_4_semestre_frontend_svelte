@@ -20,27 +20,27 @@
         <span class="brand-text">DriveFlow</span>
       </div>
       
-      <ul class="nav-menu">
+      <ul class="nav-menu"> 
         <li>
-          <a href={resolve('/dashboard')} class:active={currentPath.startsWith('/dashboard')}>
+          <a href={resolve('/dashboard')} class:active={currentPath.startsWith('/dashboard')} data-sveltekit-reload>
             <i class="fa-solid fa-table-columns"></i>
             <span>Dashboard</span>
           </a>
         </li>
         <li>
-          <a href={resolve('/usuarios')} class:active={currentPath.startsWith('/usuarios')}>
+          <a href={resolve('/usuarios')} class:active={currentPath.startsWith('/usuarios')} data-sveltekit-reload>
             <i class="fa-solid fa-users"></i>
             <span>Usuários</span>
           </a>
         </li>
         <li>
-          <a href={resolve('/veiculos')} class:active={currentPath.startsWith('/veiculos')}>
+          <a href={resolve('/veiculos')} class:active={currentPath.startsWith('/veiculos')} data-sveltekit-reload>
             <i class="fa-solid fa-car"></i>
             <span>Veículos</span>
           </a>
         </li>
         <li>
-          <a href={resolve('/manutencoes')} class:active={currentPath.startsWith('/manutencoes')}>
+          <a href={resolve('/manutencoes')} class:active={currentPath.startsWith('/manutencoes')} data-sveltekit-reload>
             <i class="fa-solid fa-wrench"></i>
             <span>Manutenções</span>
           </a>
@@ -54,10 +54,12 @@
           </div>
           <span class="user-name">{userName}</span>
         </div>
-        <button aria-label="Sair" class="btn-logout" onclick={() => goto(resolve('/logout'))}>
-          <i class="fa-solid fa-right-from-bracket"></i>
-          <span>Sair</span>
-        </button>
+        <form method="POST" action="/logout">
+          <button type="submit" aria-label="Sair" class="btn-logout">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Sair</span>
+          </button>
+        </form>
       </div>
     </div>
   </nav>

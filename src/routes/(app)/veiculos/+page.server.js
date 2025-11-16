@@ -26,9 +26,12 @@ export const actions = {
       size: data.get("size"),
       sort: data.get("sort"),
       placa: searchQuery,
-      modelo: searchQuery,
       marca: searchQuery,
-      chassi: searchQuery,
+      tipoVeiculo: searchQuery,
+      anoFabricacao: searchQuery,
+      kmAtual: searchQuery,
+      limiteAvisoKm: searchQuery,
+      status: searchQuery
     };
 
     const service = vehicleService(locals.token);

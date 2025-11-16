@@ -4,7 +4,7 @@
   import { Mask } from "maska";
   import { toastState } from "$lib/stores/toast.svelte";
   import Toaster from "$lib/components/layout/Toaster.svelte";
-  import VehicleForm from "$lib/components/VehicleForm.svelte";
+  import MaintenanceForm from "$lib/components/MaintenanceForm.svelte";
   import ConfirmDialog from "$lib/components/layout/ConfirmDialog.svelte";
   import Modal from "$lib/components/layout/Modal.svelte";
   import DataTable from "$lib/components/layout/DataTable.svelte";
@@ -16,56 +16,53 @@
 
   const { data } = $props();
 
-  const vehiclesTable = createDataTableStore({
+  const manutencoesTable = createDataTableStore({
       endpoint: "?/search",
       columns: [
         { key: "id", label: "ID", width: '70px' },
-        { key: "numeroVeiculo", label: "Número", width: '100px' },
-        { key: "placa", label: "Placa", width: '120px' },
-        { key: "tipoVeiculo", label: "Tipo", width: '120px' },
-        { key: "marca", label: "Marca", width: '130px' },
-        { key: "anoFabricacao", label: "Ano", width: '90px' },
-        { key: "kmAtual", label: "KM Atual", width: '120px' },
-        { key: "status", label: "Status", width: '100px' },
+        { key: "dataManutencao", label: "Data", width: '120px' },
+        { key: "descricao", label: "Descrição", width: '200px' },
+        { key: "custo", label: "Custo (R$)", width: '100px' },
+        { key: "tipoManutencao", label: "Tipo", width: '100px' },
+        { key: "placaVeiculo", label: "Veículo", width: '100px' },
         { key: "acoes", label: "Ações", width: '100px', sortable: false },
-      ],
+      ]
     });
 
-  // Simplify dialogs to local state
+  // Estados do diálogo
   let isEditing = $state(false);
   let isDeleting = $state(false);
-  let selectedVehicle = $state(null);
+  let selectedManutencao = $state(null);
   let isEditMode = $state(false);
 
   const placaMask = new Mask({ mask: "@@@-#*##" }); // Brazilian plate format
   const currentUser = $state(data?.session?.user);
   const isAdmin = $derived(currentUser?.role === "ADMIN");
-  const limitReached = $derived(vehiclesTable.state.totalItems >= 5);
+  const limitReached = $derived(manutencoesTable.state.totalItems >= 50);
+
 
   // === Helpers ===
-  const formatKm = (km) => {
-    return new Intl.NumberFormat('pt-BR').format(km) + ' km';
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    }).format(value);
   };
 
-  const getStatusBadge = (status) => {
-    const badges = {
-      'ATIVO': 'badge-ativo',
-      'INATIVO': 'badge-inativo',
-      'MANUTENCAO': 'badge-manutencao',
-      'EXCLUIDO': 'badge-excluido'
-    };
-    return badges[status] || 'badge-secondary';
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    return dateString.split('-').reverse().join('/');
   };
 
-  // === Deletion logic (inline, no store) ===
-  async function deleteVehicle(vehicle) {
-    if (!vehicle?.id) {
-      return { success: false, message: "Veículo não selecionado." };
+  // === Lógica de exclusão ===
+  async function deleteManutencao(manutencao) {
+    if (!manutencao?.id) {
+      return { success: false, message: "Manutenção não selecionada." };
     }
 
     try {
       const formData = new FormData();
-      formData.append("id", vehicle.id);
+      formData.append("id", manutencao.id);
       const response = await fetch("?/delete", { method: "POST", body: formData });
       if (response.redirected) {
         window.location.href = response.url;
@@ -74,44 +71,44 @@
       const result = deserialize(await response.text());
 
       if (result.type === "success") {
-        return { success: true, message: "Veículo excluído com sucesso." };
+        return { success: true, message: "Manutenção excluída com sucesso." };
       } else {
-        return { success: false, message: result.data.error || "Não foi possível excluir o veículo." };
+        return { success: false, message: result.data.error || "Não foi possível excluir a manutenção." };
       }
     } catch {
-      return { success: false, message: "Não foi possível excluir o veículo." };
+      return { success: false, message: "Erro ao tentar excluir a manutenção." };
     }
   }
 
-  // === Lifecycle ===
+  // === Ciclo de Vida ===
   onMount(() => {
-    vehiclesTable.initialize(data);
+    manutencoesTable.initialize(data);
     if (data?.error) toastState.error(data.error);
   });
 
-  // === Handlers ===
+  // === Manipuladores ===
   const handleCreate = () => {
-    selectedVehicle = null;
+    selectedManutencao = null;
     isEditMode = false;
     isEditing = true;
   };
 
-  const handleEdit = (vehicle) => {
-    selectedVehicle = vehicle;
+  const handleEdit = (manutencao) => {
+    selectedManutencao = manutencao;
     isEditMode = true;
     isEditing = true;
   };
 
-  const handleDelete = (vehicle) => {
-    selectedVehicle = vehicle;
+  const handleDelete = (manutencao) => {
+    selectedManutencao = manutencao;
     isDeleting = true;
   };
 
   const confirmDelete = async () => {
-    const result = await deleteVehicle(selectedVehicle);
+    const result = await deleteManutencao(selectedManutencao);
     if (result.success) {
       toastState.success(result.message);
-      vehiclesTable.fetchData();
+      manutencoesTable.fetchData();
     } else {
       toastState.error(result.message);
     }
@@ -120,8 +117,8 @@
 
   const handleSaveSuccess = () => {
     isEditing = false;
-    toastState.success("Veículo salvo com sucesso.");
-    vehiclesTable.fetchData();
+    toastState.success("Manutenção salva com sucesso!");
+    manutencoesTable.fetchData();
   };
 </script>
 
@@ -138,18 +135,20 @@
     onCancel={() => isDeleting = false}
   >
     {#snippet message()}
-      Tem certeza que deseja excluir o veículo <b>{selectedVehicle?.numeroVeiculo}</b> - <b>{selectedVehicle?.placa}</b>?
+      Tem certeza que deseja excluir a manutenção do veículo <b>{selectedManutencao?.placaVeiculo}</b> de <b>{selectedManutencao?.dataManutencao ? formatDate(selectedManutencao.dataManutencao) : ''}</b>?
     {/snippet}
   </ConfirmDialog>
 {/if}
 
 {#if isEditing}
   <Modal
-    title={isEditMode ? 'Editar Veículo' : 'Criar Veículo'}
+    title={isEditMode ? 'Editar Manutenção' : 'Nova Manutenção'}
     onClose={() => isEditing = false}
   >
-    <VehicleForm
-      vehicle={selectedVehicle}
+    <MaintenanceForm
+      maintenance={selectedManutencao}
+      tiposManutencao={data.tipoManutencao}
+      vehicles={data.vehicles}
       isEditMode={isEditMode}
       onCancel={() => isEditing = false}
       onSaveSuccess={handleSaveSuccess}
@@ -160,66 +159,70 @@
 
 {#if isAdmin}
   <PlanLimitIndicator 
-    limit={5} 
-    used={vehiclesTable.state.totalItems} 
-    message="veículos registrados" 
+    limit={50} 
+    used={manutencoesTable.state.totalItems} 
+    message="manutenções registradas" 
   />
 {/if}
 
-
 <DataTable
-  columns={vehiclesTable.columns}
-  items={vehiclesTable.state.items}
-  isLoading={vehiclesTable.state.isLoading}
-  totalItems={vehiclesTable.state.totalItems}
-  currentPage={vehiclesTable.state.currentPage}
-  pageSize={vehiclesTable.state.pageSize}
-  currentSort={vehiclesTable.state.sorting}
+  columns={manutencoesTable.columns}
+  items={manutencoesTable.state.items}
+  isLoading={manutencoesTable.state.isLoading}
+  totalItems={manutencoesTable.state.totalItems}
+  currentPage={manutencoesTable.state.currentPage}
+  pageSize={manutencoesTable.state.pageSize}
+  currentSort={manutencoesTable.state.sorting}
 
   onSort={async (field, order) => {
-    const result = await vehiclesTable.updateSort(field, order);
+    const result = await manutencoesTable.updateSort(field, order);
     if (!result.success) toastState.error(result.message);
   }}
 
   onPageChange={async (page) => {
-    const result = await vehiclesTable.changePage(page);
+    const result = await manutencoesTable.changePage(page);
     if (!result.success) toastState.error(result.message);
   }}
 
   onSearch={async (search) => {
-    const result = await vehiclesTable.updateSearch(search);
+    const result = await manutencoesTable.updateSearch(search);
     if (!result.success) toastState.error(result.message);
   }}
 >
   {#snippet toolbar()}
     {#if isAdmin && !limitReached}
       <Button variant="primary" icon="plus" onclick={handleCreate}>
-        Novo Veículo
+        Nova Manutenção
       </Button>
     {/if}
   {/snippet}
 
-  {#snippet cell_placa(vehicle)} 
-    {placaMask.masked(vehicle.placa)} 
+  {#snippet cell_dataManutencao(manutencao)}
+    {formatDate(manutencao.dataManutencao)}
   {/snippet}
 
-  {#snippet cell_kmAtual(vehicle)}
-    {formatKm(vehicle.kmAtual)}
+  {#snippet cell_custo(manutencao)}
+    {formatCurrency(manutencao.custo || 0)}
   {/snippet}
 
-  {#snippet cell_status(vehicle)}
-    <span class="badge {getStatusBadge(vehicle.status)}">
-      {vehicle.status}
+  {#snippet cell_tipoManutencao(manutencao)}
+    <span class="badge">
+      {manutencao.tipoManutencao || 'Não especificado'}
     </span>
   {/snippet}
 
-  {#snippet cell_acoes(vehicle)}
+  {#snippet cell_placaVeiculo(manutencao)}
+    {placaMask.masked(manutencao.placaVeiculo || '')}
+  {/snippet}
+
+  {#snippet cell_acoes(manutencao)}
   {#if isAdmin}
     <div class="btn-group">
-      <button aria-label="Editar" class="btn-icon" onclick={() => handleEdit(vehicle)}>
+      <button aria-label="Editar" class="btn-icon" onclick={() => handleEdit(manutencao)}>
         <i class="fas fa-edit"></i>
       </button>
-      <button aria-label="Excluir" class="btn-icon delete" onclick={() => handleDelete(vehicle)}>
+      <button aria-label="Excluir" class="btn-icon delete" onclick={() => handleDelete(manutencao)}
+        disabled={!manutencao.id}>
         <i class="fas fa-trash"></i>
       </button>
     </div>
@@ -264,38 +267,13 @@
     padding: 4px 8px;
     border-radius: 4px;
     font-size: 0.75rem;
-    font-weight: 600;
-    width: 100px;
-    text-transform: uppercase;
-  }
-
-  .badge-ativo {
-    background: rgba(34, 197, 94, 0.1);
-    color: #22c55e;
-    border: 1px solid rgba(34, 197, 94, 0.3);
-  }
-
-  .badge-excluido {
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
-    border: 1px solid rgba(239, 68, 68, 0.3);
-  }
-
-  .badge-manutencao {
-    background: rgba(234, 179, 8, 0.1);
-    color: #eab308;
-    border: 1px solid rgba(234, 179, 8, 0.3);
-  }
-
-  .badge-indisponivel {
-    background: rgba(148, 163, 184, 0.1);
-    color: #94a3b8;
-    border: 1px solid rgba(148, 163, 184, 0.3);
-  }
-
-  .badge-secondary {
-    background: rgba(148, 163, 184, 0.1);
-    color: #94a3b8;
-    border: 1px solid rgba(148, 163, 184, 0.3);
+    font-weight: 500;
+    display: inline-block;
+    min-width: 80px;
+    text-align: center;
+    text-transform: capitalize;
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    border: 1px solid rgba(59, 130, 246, 0.2);
   }
 </style>

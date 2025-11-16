@@ -55,6 +55,17 @@ export class ApiService {
     }
   }
 
+  async getLookups() {
+    try {
+      const data = await this.apiClient.get(`/${this.endpoint}/lookups`);
+      return { items: data };
+    } catch (error) {
+      if (error instanceof ApiError) return { error: error.message };
+      logger.error(`Unable to fetch lookups for ${this.endpoint}:`, error);
+      return { error: "Erro interno do servidor" };
+    }
+  }
+  
   async create(payload) {
     if (this.endpoint === "perfis-motorista") {
       payload.usuarioId = payload.usuarioId || 0;
