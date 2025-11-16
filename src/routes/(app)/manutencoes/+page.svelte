@@ -38,7 +38,8 @@
   const placaMask = new Mask({ mask: "@@@-#*##" }); // Brazilian plate format
   const currentUser = $state(data?.session?.user);
   const isAdmin = $derived(currentUser?.role === "ADMIN");
-  const limitReached = $derived(manutencoesTable.state.totalItems >= 50);
+  const isPaidPlan = $derived(currentUser?.plano === "PAGO");
+  const limitReached = $derived(!isPaidPlan && manutencoesTable.state.totalItems >= 50);
 
 
   // === Helpers ===
@@ -157,7 +158,7 @@
   </Modal>
 {/if}
 
-{#if isAdmin}
+{#if isAdmin && !isPaidPlan}
   <PlanLimitIndicator 
     limit={50} 
     used={manutencoesTable.state.totalItems} 

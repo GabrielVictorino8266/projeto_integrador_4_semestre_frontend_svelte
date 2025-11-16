@@ -40,7 +40,9 @@
   const placaMask = new Mask({ mask: "@@@-#*##" }); // Brazilian plate format
   const currentUser = $state(data?.session?.user);
   const isAdmin = $derived(currentUser?.role === "ADMIN");
-  const limitReached = $derived(vehiclesTable.state.totalItems >= 5);
+  const isPaidPlan = $derived(currentUser?.plano === "PAGO");
+  const limitReached = $derived(!isPaidPlan && vehiclesTable.state.totalItems >= 5);
+
 
   // === Helpers ===
   const formatKm = (km) => {
@@ -49,10 +51,10 @@
 
   const getStatusBadge = (status) => {
     const badges = {
-      'ATIVO': 'badge-ativo',
-      'INATIVO': 'badge-inativo',
-      'MANUTENCAO': 'badge-manutencao',
-      'EXCLUIDO': 'badge-excluido'
+      'ativo': 'badge-ativo',
+      'inativo': 'badge-inativo',
+      'manutencao': 'badge-manutencao',
+      'excluido': 'badge-excluido'
     };
     return badges[status] || 'badge-secondary';
   };
@@ -160,7 +162,7 @@
   </Modal>
 {/if}
 
-{#if isAdmin}
+{#if isAdmin && !isPaidPlan}
   <PlanLimitIndicator 
     limit={5} 
     used={vehiclesTable.state.totalItems} 
@@ -277,7 +279,7 @@
     border: 1px solid rgba(34, 197, 94, 0.3);
   }
 
-  .badge-excluido {
+  .badge-indisponivel {
     background: rgba(239, 68, 68, 0.1);
     color: #ef4444;
     border: 1px solid rgba(239, 68, 68, 0.3);
@@ -289,7 +291,7 @@
     border: 1px solid rgba(234, 179, 8, 0.3);
   }
 
-  .badge-indisponivel {
+  .badge-excluido {
     background: rgba(148, 163, 184, 0.1);
     color: #94a3b8;
     border: 1px solid rgba(148, 163, 184, 0.3);

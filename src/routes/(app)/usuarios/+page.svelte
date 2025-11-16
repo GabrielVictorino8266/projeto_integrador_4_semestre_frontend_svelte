@@ -38,7 +38,8 @@ import { deserialize } from "$app/forms";
 
   const currentUser = $state(data?.session?.user);
   const cpfMask = new Mask({ mask: "###.###.###-##" });
-  const limitReached = $derived(usersTable.state.totalItems >= 5);
+  const isPaidPlan = $derived(!currentUser?.plano === "PAGO");
+  const limitReached = $derived(!isPaidPlan && usersTable.state.totalItems >= 5);
   const isAdmin = $derived(currentUser?.role === "ADMIN");
 
   // === Helpers ===
@@ -147,7 +148,7 @@ import { deserialize } from "$app/forms";
   </Modal>
 {/if}
 
-{#if isAdmin}
+{#if isAdmin && !isPaidPlan}
   <PlanLimitIndicator 
     limit={5} 
     used={usersTable.state.totalItems} 
