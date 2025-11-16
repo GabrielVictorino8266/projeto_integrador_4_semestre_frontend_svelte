@@ -1,0 +1,4 @@
+{
+  "/authenticate": "/auth",
+  "/usuarios/:id": "/usuarios/:id"
+}

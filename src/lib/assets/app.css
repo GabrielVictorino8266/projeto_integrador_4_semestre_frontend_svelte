@@ -1,0 +1,126 @@
+@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css";
+@import "./buttons.css";
+@import "./form.css";
+@import "./badge.css";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a1018;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e3a5f;
+  border-radius: 6px;
+  border: 2px solid #0a1018;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2563eb;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #1d4ed8;
+}
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #0a1628 0%, #1a2f4f 50%, #0f1f38 100%);
+  min-height: 100vh;
+  color: #e0e6ed;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+/* Efeito de círculos decorativos */
+body::before {
+  content: "";
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.15), transparent);
+  border-radius: 50%;
+  top: -100px;
+  right: -100px;
+  pointer-events: none;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.1), transparent);
+  border-radius: 50%;
+  bottom: 100px;
+  left: -50px;
+  pointer-events: none;
+}
+
+.page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 10px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 13px;
+  color: #8b9cb6;
+}
+
+.login-link a {
+  color: #3b82f6;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.login-link a:hover {
+  color: #60a5fa;
+  text-decoration: underline;
+}
+
+footer {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 11px;
+  color: #4a5f7f;
+}
+
+/* Form animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease;
+}

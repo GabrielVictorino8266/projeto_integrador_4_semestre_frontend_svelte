@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detalhes da Empresa</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 20px auto;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+      }
+
+      .header h1 {
+        font-size: 2em;
+        margin-bottom: 10px;
+      }
+
+      .back-button {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 20px;
+        background: #6c757d;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        transition: all 0.3s;
+      }
+
+      .back-button:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+      }
+
+      .content {
+        padding: 30px;
+      }
+
+      .info-card {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .info-group {
+        margin-bottom: 15px;
+      }
+
+      .info-label {
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 5px;
+        display: block;
+      }
+
+      .info-value {
+        font-size: 1.1em;
+        color: #333;
+        padding: 8px 12px;
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 50px;
+        font-size: 1.2em;
+        color: #666;
+      }
+
+      .error {
+        color: #dc3545;
+        text-align: center;
+        padding: 20px;
+        background: #fff5f5;
+        border-radius: 6px;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Detalhes da Empresa</h1>
+        <a href="index.html" class="back-button">Voltar para a lista</a>
+      </div>
+
+      <div class="content" id="empresaContent">
+        <div class="loading">Carregando informações da empresa...</div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const empresaId = urlParams.get("id") || 1; // Default to ID 1 if not specified
+
+        try {
+          const response = await fetch(
+            `http://localhost:7777/api/empresas/${empresaId}`,
+            {
+              headers: {
+                Authorization:
+                  "Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktand0Iiwic3ViIjoiMTIzNDU2Nzg5MDEiLCJleHAiOjE3NjA4MTczMzQsImlhdCI6MTc2MDgxMzczNCwic2NvcGUiOiJST0xFX0FETUlOIn0.oNpgPw8aUCkvGThi1SLGiCOJsi4Yu2dyp9lPoWwSP9oS4Q-naEsYe7hF4AVTlzF1N0czDru_IdZbQraM-FGXW0mLqVzOT6QgYpbfaMdfLNvtZS1xf8w87eoT8JNsY0z986SKAybpMO4JUKiPYEoFa7r5mxkmKYljFBVpnQiXOH29WeEHv2dR-vfSYKjwFI-lIOA1sPMCARNyBJNTm2CZaGdcgAZ8rO4jUn4En7GonWmLFsXXKdHOpmJ12_VeLWJV2WiLr6h7CndAdONQA1HhFD6Gf7ZNGVjEPNjCoStgZnSyxEYvxxaAlYfpJA2JBFZK1j8ErDa7fezZVW09cEPaxw",
+              },
+            },
+          );
+
+          if (!response.ok) {
+            throw new Error("Erro ao carregar os dados da empresa");
+          }
+
+          const empresa = await response.json();
+          renderEmpresa(empresa);
+        } catch (error) {
+          console.error("Erro:", error);
+          document.getElementById("empresaContent").innerHTML = `
+                    <div class="error">
+                        <p>Não foi possível carregar as informações da empresa.</p>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+        }
+      });
+
+      function renderEmpresa(empresa) {
+        const content = document.getElementById("empresaContent");
+
+        content.innerHTML = `
+                <div class="info-card">
+                    <h2>Informações da Empresa</h2>
+                    <div class="info-group">
+                        <span class="info-label">ID:</span>
+                        <div class="info-value">${empresa.id || "Não informado"}</div>
+                    </div>
+                    <div class="info-group">
+                        <span class="info-label">Razão Social:</span>
+                        <div class="info-value">${empresa.razaoSocial || "Não informado"}</div>
+                    </div>
+                    <div class="info-group">
+                        <span class="info-label">Nome Fantasia:</span>
+                        <div class="info-value">${empresa.nomeFantasia || "Não informado"}</div>
+                    </div>
+                    <div class="info-group">
+                        <span class="info-label">CNPJ:</span>
+                        <div class="info-value">${formatCNPJ(empresa.cnpj) || "Não informado"}</div>
+                    </div>
+                </div>
+            `;
+      }
+
+      function formatCNPJ(cnpj) {
+        if (!cnpj) return null;
+        // Remove non-numeric characters
+        const cleaned = cnpj.toString().replace(/\D/g, "");
+        // Format as 00.000.000/0000-00
+        return cleaned.replace(
+          /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,
+          "$1.$2.$3/$4-$5",
+        );
+      }
+
+      function formatDate(dateString) {
+        if (!dateString) return "Não informado";
+        const date = new Date(dateString);
+        return date.toLocaleString("pt-BR");
+      }
+    </script>
+  </body>
+</html>
