@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico de Manutenções</title>
+    <link rel="stylesheet" href="style2.css">
+</head>
+
+<style>
+.page-title {
+  font-size: 1.8rem;         /* tamanho elegante */
+  font-weight: 600;          /* deixa o texto marcante */
+  color: #1e293b;            /* tom escuro, moderno */
+  margin: 25px 0 15px 20px;  /* espaçamento da borda esquerda */
+  text-align: left;          /* garante alinhamento à esquerda */
+}
+</style>
+
+<body>
+    <!-- Sidenav -->
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo"><i class="fas fa-car"></i> VeiculosApp</div>
+        <ul class="nav-menu">
+            <li class="nav-item active">
+                <i class="nav-icon fas fa-chart-line"></i>
+                Dashboard
+            </li>
+            <li class="nav-item">
+                <i class="nav-icon fas fa-truck-pickup"></i>
+                Veículos
+            </li>
+            <li class="nav-item">
+                <i class="nav-icon fas fa-users"></i>
+                Motoristas
+            </li>
+            <li class="nav-item">
+                <i class="nav-icon fas fa-wrench"></i>
+                Manutenção
+            </li>
+            <li class="nav-item">
+                <i class="nav-icon fas fa-chart-pie"></i>
+                Relatórios
+            </li>
+            <li class="nav-item">
+                <i class="nav-icon fas fa-cog"></i>
+                Configurações
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Alert -->
+        <div class="alert alert-success">
+            <span class="alert-icon">✓</span>
+            <span class="alert-message">Manutenção cadastrada com sucesso!</span>
+            <a href="#" class="alert-close">×</a>
+        </div>
+
+        <header class="header">
+            <h1>Histórico de Manutenções</h1>
+            <div class="user-info">
+                <div class="user-avatar">AD</div>
+                <div>
+                    <div style="font-weight: 600; font-size: 14px;">Admin</div>
+                    <div style="font-size: 12px; color: #94a3b8;">Administrador</div>
+                </div>
+            </div>
+        </header>
+
+        <section class="cards">
+            <div class="card">
+                <h2>Total de manutenções</h2>
+                <p>Qtd</p>
+                <h2>Manutenções/mês</h2>
+                <p>Qtd</p>
+            </div>
+
+            <div class="card">
+                <h2>Valor Total Gasto</h2>
+                <p>R$xx</p>
+                <h2>Média por serviço</h2>
+                <p>R$xx</p>
+            </div>
+
+            <div class="card legend">
+                <ul>
+                    <li><span class="dot green"></span> Preventiva</li>
+                    <li><span class="dot blue"></span> Revisão</li>
+                    <li><span class="dot red"></span> Corretiva</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <div class="search-box">
+                <i class="search-icon fas fa-search"></i>
+                <input type="text" placeholder="Buscar por placa, modelo ou marca..." id="searchInput">
+            </div>
+            <div class="toolbar-actions">
+                <button class="btn btn-secondary" onclick="toggleFilters()">
+                    <i class="fas fa-filter"></i> Mais filtros
+                </button>
+                <button class="btn btn-primary" onclick="openModal('add')">
+                    <i class="fas fa-plus"></i> + Registrar Manutenção
+                </button>
+
+                <!-- Dropdown de Filtros -->
+                <div class="filter-dropdown" id="filterDropdown">
+                    <div class="filter-group">
+                        <label>Status</label>
+                        <select id="filterStatus">
+                            <option value="">Todos</option>
+                            <option value="ativo">Preventiva</option>
+                            <option value="manutenção">Corretiva</option>
+                            <option value="inativo">Revisão</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Tipo</label>
+                        <select id="filterTipo">
+                            <option value="">Todos</option>
+                            <option value="Carro">Carro</option>
+                            <option value="Caminhão">Caminhão</option>
+                            <option value="Van">Van</option>
+                            <option value="Moto">Moto</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Ano (Mínimo)</label>
+                        <input type="number" id="filterAno" placeholder="Ex: 2020">
+                    </div>
+                    <div class="filter-actions">
+                        <button class="btn btn-secondary" onclick="clearFilters()">Limpar</button>
+                        <button class="btn btn-primary" onclick="applyFilters()">Aplicar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Vehicles Table -->
+        <section class="content-section">
+            <div class="table-container">
+                <table class="vehicles-table">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Veículo</th>
+                            <th>Tipo</th>
+                            <th>Serviço</th>
+                            <th>Local</th>
+                            <th>Valor</th>
+                            <th class="actions-column">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>10/01/2025</td>
+                            <td>HR-V</td>
+                            <td><span class="badge badge-maintenance">Revisão</span></td>
+                            <td>Troca de óleo e filtros</td>
+                            <td>Oficina AutoPro</td>
+                            <td>R$ 380,00</td>
+                            <td class="actions-cell">
+                                <a href="#edit-1" class="btn-action btn-edit" title="Editar">✏️</a>
+                                <a href="#delete-1" class="btn-action btn-delete" title="Excluir">🗑️</a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>22/02/2025</td>
+                            <td>Corolla</td>
+                            <td><span class="badge badge-active">Preventiva</span></td>
+                            <td>Alinhamento e balanceamento</td>
+                            <td>CenterCar</td>
+                            <td>R$ 150,00</td>
+                            <td class="actions-cell">
+                                <a href="#edit-2" class="btn-action btn-edit" title="Editar">✏️</a>
+                                <a href="#delete-2" class="btn-action btn-delete" title="Excluir">🗑️</a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>15/03/2025</td>
+                            <td>Onix</td>
+                            <td><span class="badge badge-danger">Corretiva</span></td>
+                            <td>Substituição da embreagem</td>
+                            <td>Oficina Silva Motors</td>
+                            <td>R$ 1.250,00</td>
+                            <td class="actions-cell">
+                                <a href="#edit-3" class="btn-action btn-edit" title="Editar">✏️</a>
+                                <a href="#delete-3" class="btn-action btn-delete" title="Excluir">🗑️</a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>03/04/2025</td>
+                            <td>Compass</td>
+                            <td><span class="badge badge-active">Preventiva</span></td>
+                            <td>Troca de fluído de freio</td>
+                            <td>TopCar Service</td>
+                            <td>R$ 210,00</td>
+                            <td class="actions-cell">
+                                <a href="#edit-4" class="btn-action btn-edit" title="Editar">✏️</a>
+                                <a href="#delete-4" class="btn-action btn-delete" title="Excluir">🗑️</a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>18/05/2025</td>
+                            <td>HB20</td>
+                            <td><span class="badge badge-maintenance">Revisão</span></td>
+                            <td>Troca de pastilhas de freio</td>
+                            <td>AutoPrime</td>
+                            <td>R$ 320,00</td>
+                            <td class="actions-cell">
+                                <a href="#edit-5" class="btn-action btn-edit" title="Editar">✏️</a>
+                                <a href="#delete-5" class="btn-action btn-delete" title="Excluir">🗑️</a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>09/06/2025</td>
+                            <td>Gol</td>
+                            <td><span class="badge badge-danger">Corretiva</span></td>
+                            <td>Troca de correia dentada</td>
+                            <td>Oficina Ideal</td>
+                            <td>R$ 450,00</td>
+                            <td class="actions-cell">
+                                <a href="#edit-6" class="btn-action btn-edit" title="Editar">✏️</a>
+                                <a href="#delete-6" class="btn-action btn-delete" title="Excluir">🗑️</a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>27/07/2025</td>
+                            <td>Kicks</td>
+                            <td><span class="badge badge-active">Preventiva</span></td>
+                            <td>Troca de filtro de ar</td>
+                            <td>AutoCheck</td>
+                            <td>R$ 90,00</td>
+                            <td class="actions-cell">
+                                <a href="#edit-7" class="btn-action btn-edit" title="Editar">✏️</a>
+                                <a href="#delete-7" class="btn-action btn-delete" title="Excluir">🗑️</a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>05/08/2025</td>
+                            <td>Renegade</td>
+                            <td><span class="badge badge-maintenance">Revisão</span></td>
+                            <td>Troca de velas e limpeza de bicos</td>
+                            <td>CarMaster</td>
+                            <td>R$ 410,00</td>
+                            <td class="actions-cell">
+                                <a href="#edit-8" class="btn-action btn-edit" title="Editar">✏️</a>
+                                <a href="#delete-8" class="btn-action btn-delete" title="Excluir">🗑️</a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>16/09/2025</td>
+                            <td>Polo</td>
+                            <td><span class="badge badge-active">Preventiva</span></td>
+                            <td>Troca de fluído de arrefecimento</td>
+                            <td>Oficina StarCar</td>
+                            <td>R$ 280,00</td>
+                            <td class="actions-cell">
+                                <a href="#edit-9" class="btn-action btn-edit" title="Editar">✏️</a>
+                                <a href="#delete-9" class="btn-action btn-delete" title="Excluir">🗑️</a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>25/10/2025</td>
+                            <td>Argo</td>
+                            <td><span class="badge badge-danger">Corretiva</span></td>
+                            <td>Troca de amortecedores</td>
+                            <td>Oficina Rápida</td>
+                            <td>R$ 900,00</td>
+                            <td class="actions-cell">
+                                <a href="#edit-10" class="btn-action btn-edit" title="Editar">✏️</a>
+                                <a href="#delete-10" class="btn-action btn-delete" title="Excluir">🗑️</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <div class="pagination-info">
+                    Mostrando <strong>1-10</strong> de <strong>45</strong> veículos
+                </div>
+                <div class="pagination-controls">
+                    <a href="#page-prev" class="pagination-btn pagination-btn-disabled">« Anterior</a>
+                    <a href="#page-1" class="pagination-btn pagination-btn-active">1</a>
+                    <a href="#page-2" class="pagination-btn">2</a>
+                    <a href="#page-3" class="pagination-btn">3</a>
+                    <a href="#page-4" class="pagination-btn">4</a>
+                    <a href="#page-5" class="pagination-btn">5</a>
+                    <a href="#page-next" class="pagination-btn">Próximo »</a>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
