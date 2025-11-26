@@ -1,3 +1,8 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 body {
   margin: 0;
   padding: 0;
@@ -25,11 +30,51 @@ body {
   z-index: 10;
 }
 
-.logo-section {
+a.logo-section {
+  text-decoration: none; /* remove underline */
+  color: inherit; /* inherit text color */
+  cursor: pointer; /* keep pointer cursor */
+  -webkit-tap-highlight-color: transparent; /* remove mobile highlight */
+
   display: flex;
   align-items: center;
-  gap: 15px;
-  margin-bottom: 40px;
+  gap: 0.875rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  color: #fff;
+}
+
+.logo-section:focus,
+.logo-section:active {
+  outline: none; /* remove focus ring */
+}
+
+.logo-icon {
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.logo-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.logo-section h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+
+.logo-section:hover {
+  transform: translateY(-2px);
 }
 
 .logo {
@@ -200,6 +245,43 @@ input[type="checkbox"] {
 
 .btn-login:active {
   transform: translateY(0);
+}
+
+/* Loading State */
+.btn-login.loading {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.btn-login.loading::before {
+  display: none;
+}
+
+.btn-login.loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Optional: Hide button text while loading */
+.btn-login.loading {
+  color: transparent;
 }
 
 footer {
@@ -438,23 +520,10 @@ footer {
   color: #f87171;
   font-size: 14px;
   margin-bottom: 20px;
-  animation: slideDown 0.3s ease-out;
 }
 
 .error-message svg {
   flex-shrink: 0;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 @keyframes float-orb {

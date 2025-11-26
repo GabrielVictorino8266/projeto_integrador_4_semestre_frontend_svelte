@@ -1,72 +1,72 @@
 .badge {
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
 }
 
 .badge-primary {
-    background: rgba(96, 165, 250, 0.25);
-    color: #93c5fd;
+  background: rgba(96, 165, 250, 0.25);
+  color: #93c5fd;
 }
 
 .badge-secondary {
-    background: rgba(148, 163, 184, 0.25);
-    color: #cbd5e1;
+  background: rgba(148, 163, 184, 0.25);
+  color: #cbd5e1;
 }
 
 .badge-ativo {
-    background: rgba(74, 222, 128, 0.25);
-    color: #86efac;
+  background: rgba(74, 222, 128, 0.25);
+  color: #86efac;
 }
 
 .badge-success {
-    background: rgba(74, 222, 128, 0.25);
-    color: #86efac;
+  background: rgba(74, 222, 128, 0.25);
+  color: #86efac;
 }
 
 .badge-manutencao {
-    background: rgba(251, 191, 36, 0.25);
-    color: #fde047;
+  background: rgba(251, 191, 36, 0.25);
+  color: #fde047;
 }
 
 .badge-warning {
-    background: rgba(251, 191, 36, 0.25);
-    color: #fde047;
+  background: rgba(251, 191, 36, 0.25);
+  color: #fde047;
 }
 
 .badge-inativo {
-    background: rgba(248, 113, 113, 0.25);
-    color: #fca5a5;
+  background: rgba(248, 113, 113, 0.25);
+  color: #fca5a5;
 }
 
 .badge-danger {
-    background: rgba(248, 113, 113, 0.25);
-    color: #fca5a5;
+  background: rgba(248, 113, 113, 0.25);
+  color: #fca5a5;
 }
 
 .badge-error {
-    background: rgba(248, 113, 113, 0.25);
-    color: #fca5a5;
+  background: rgba(248, 113, 113, 0.25);
+  color: #fca5a5;
 }
 
 .badge-info {
-    background: rgba(56, 189, 248, 0.25);
-    color: #7dd3fc;
+  background: rgba(56, 189, 248, 0.25);
+  color: #7dd3fc;
 }
 
 .badge-pending {
-    background: rgba(192, 132, 252, 0.25);
-    color: #c4b5fd;
+  background: rgba(192, 132, 252, 0.25);
+  color: #c4b5fd;
 }
 
 .badge-neutral {
-    background: rgba(148, 163, 184, 0.25);
-    color: #cbd5e1;
+  background: rgba(148, 163, 184, 0.25);
+  color: #cbd5e1;
 }
 
 .badge-dark {
-    background: rgba(100, 116, 139, 0.25);
-    color: #e2e8f0;
+  background: rgba(100, 116, 139, 0.25);
+  color: #e2e8f0;
 }

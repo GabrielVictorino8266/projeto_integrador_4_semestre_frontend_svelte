@@ -49,6 +49,7 @@
     margin-bottom: 25px;
     gap: 15px;
     flex-wrap: wrap;
+    padding: 0 15px;
   }
 
   .toolbar-buttons {

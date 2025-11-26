@@ -4,7 +4,32 @@ import { authService } from "$lib/api/auth";
 
 /** @type {import('./$types').PageLoad} */
 export function load({ url }) {
-  return { username: url.searchParams.get("username") };
+  const reason = url.searchParams.get("reason");
+  const timestamp = url.searchParams.get("timestamp");
+  const redirect_url = url.searchParams.get("redirect");
+
+  // Map "reason" query param to user-friendly messages
+  let error = "";
+
+  switch (reason) {
+    case "session_expired":
+      error = "Sua sessão expirou. Faça login novamente.";
+      break;
+
+    case "must_login_to_purchase":
+      error = "Realize o login ou cadastre-se para continuar.";
+      break;
+
+    default:
+      error = "";
+  }
+
+  return {
+    username: url.searchParams.get("username"),
+    error,
+    timestamp,
+    redirect_url,
+  };
 }
 
 /** @satisfies {import('./$types').Actions} */

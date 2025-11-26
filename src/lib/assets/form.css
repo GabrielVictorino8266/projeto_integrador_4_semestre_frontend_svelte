@@ -112,9 +112,35 @@
   margin-top: 3px;
 }
 
-
 /* Força estilo consistente para date inputs */
 .form-group input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(0.8);
   cursor: pointer;
+}
+
+.form-select {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 10px;
+  color: #e0e6ed;
+  font-size: 14px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: rgba(15, 23, 42, 0.8);
+}
+
+.form-select.error {
+  border-color: #ef4444;
+}
+
+.form-select option {
+  background: #0f172a;
+  color: #e0e6ed;
 }

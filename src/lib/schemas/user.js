@@ -13,15 +13,16 @@ export const UserSchema = z.object({
 
   cpf: z
     .string()
-    .transform(s => s.replace(/\D/g, ''))
-    .refine(s => s.length === 11, "O CPF deve conter 11 dígitos."),
+    .transform((s) => s.replace(/\D/g, ""))
+    .refine((s) => s.length === 11, "O CPF deve conter 11 dígitos."),
 
   email: z.string().email("Formato de e-mail inválido.").max(100),
 
-  dataNascimento: z.string()
+  dataNascimento: z
+    .string()
     .date("Data inválida") // valida formato YYYY-MM-DD
-    .transform(str => new Date(str + 'T00:00:00')) // evita timezone issues
-    .refine(date => {
+    .transform((str) => new Date(str + "T00:00:00")) // evita timezone issues
+    .refine((date) => {
       const year = date.getFullYear();
       const currentYear = new Date().getFullYear();
       return year >= currentYear - 150 && year <= currentYear - 1;
@@ -29,9 +30,12 @@ export const UserSchema = z.object({
 
   telefone: z
     .string()
-    .transform(s => s.replace(/\D/g, ''))
-    .refine(s => s.length >= 1, "O telefone é obrigatório.")
-    .refine(s => s.length <= 20, "O telefone deve ter no máximo 20 caracteres."),
+    .transform((s) => s.replace(/\D/g, ""))
+    .refine((s) => s.length >= 1, "O telefone é obrigatório.")
+    .refine(
+      (s) => s.length <= 20,
+      "O telefone deve ter no máximo 20 caracteres.",
+    ),
 });
 
 export const UpsertUserSchema = UserSchema.partial()

@@ -3,7 +3,7 @@ import { redirect } from "@sveltejs/kit";
 import { logger } from "$lib/utils/logger";
 
 /** @type {import('./$types').RequestHandler} */
-export async function GET({ cookies }) {
+export async function POST({ cookies }) {
   try {
     await authService(cookies).logout();
   } catch (e) {

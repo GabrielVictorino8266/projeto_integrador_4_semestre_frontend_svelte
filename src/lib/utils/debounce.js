@@ -5,15 +5,15 @@
  * @returns {function} Função debounced
  */
 export function debounce(func, delay = 300) {
-	let timeoutId = null;
+  let timeoutId = null;
 
-	return function (...args) {
-		clearTimeout(timeoutId);
+  return function (...args) {
+    clearTimeout(timeoutId);
 
-		timeoutId = setTimeout(() => {
-			func.apply(this, args);
-		}, delay);
-	};
+    timeoutId = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
 }
 
 /**
@@ -23,20 +23,20 @@ export function debounce(func, delay = 300) {
  * @returns {function} Função debounced que retorna Promise
  */
 export function debounceAsync(func, delay = 300) {
-	let timeoutId = null;
+  let timeoutId = null;
 
-	return function (...args) {
-		clearTimeout(timeoutId);
+  return function (...args) {
+    clearTimeout(timeoutId);
 
-		return new Promise((resolve, reject) => {
-			timeoutId = setTimeout(async () => {
-				try {
-					const result = await func.apply(this, args);
-					resolve(result);
-				} catch (error) {
-					reject(error);
-				}
-			}, delay);
-		});
-	};
+    return new Promise((resolve, reject) => {
+      timeoutId = setTimeout(async () => {
+        try {
+          const result = await func.apply(this, args);
+          resolve(result);
+        } catch (error) {
+          reject(error);
+        }
+      }, delay);
+    });
+  };
 }

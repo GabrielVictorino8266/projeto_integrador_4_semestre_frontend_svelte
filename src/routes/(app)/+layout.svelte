@@ -1,53 +1,52 @@
 <script>
-    import { goto } from '$app/navigation';
     import { page } from '$app/stores';
     import { resolve } from '$app/paths';
+
     import '$lib/assets/app.css';
 
-    let { children } = $props();
+    import CompanyLogo from '$lib/components/CompanyLogo.svelte';
+    import ProcessingPayment from '$lib/components/layout/ProcessingPayment.svelte';
+    import PlanActivationNotice from '$lib/components/PlanActivationNotice.svelte';
+
+    let { data, children } = $props();
+
+    let showProcessingPayment = $state(data?.showProcessingPayment);
+    let justActivatedPlan = $state(data?.justActivatedPlan);
     let currentPath = $derived($page.url.pathname);
     let title = $derived($page.data.title || currentPath.replace('/', ''));
+    let currentUser = $derived(data?.user);
 </script>
 
 <div class="layout">
   <nav>
     <div class="nav-content">
       <div class="nav-brand">
-        <div class="brand-icon">
-          <i class="fa-solid fa-truck-fast"></i>
-        </div>
-        <span class="brand-text">DriveFlow</span>
+        <CompanyLogo url="/dashboard" />
       </div>
       
-      <ul class="nav-menu">
+      <ul class="nav-menu"> 
         <li>
-          <a href={resolve('/dashboard')} class:active={currentPath.startsWith('/dashboard')}>
+          <a href={resolve('/dashboard')} class:active={currentPath.startsWith('/dashboard')} data-sveltekit-reload>
             <i class="fa-solid fa-table-columns"></i>
             <span>Dashboard</span>
           </a>
         </li>
         <li>
-          <a href={resolve('/usuarios')} class:active={currentPath.startsWith('/usuarios')}>
+          <a href={resolve('/usuarios')} class:active={currentPath.startsWith('/usuarios')} data-sveltekit-reload>
             <i class="fa-solid fa-users"></i>
             <span>Usuários</span>
           </a>
         </li>
         <li>
-          <a href={resolve('/veiculos')} class:active={currentPath.startsWith('/veiculos')}>
+          <a href={resolve('/veiculos')} class:active={currentPath.startsWith('/veiculos')} data-sveltekit-reload>
             <i class="fa-solid fa-car"></i>
             <span>Veículos</span>
           </a>
         </li>
         <li>
-          <a href={resolve('/manutencoes')} class:active={currentPath.startsWith('/manutencoes')}>
+          <a href={resolve('/manutencoes')} class:active={currentPath.startsWith('/manutencoes')} data-sveltekit-reload>
             <i class="fa-solid fa-wrench"></i>
             <span>Manutenções</span>
-          </a>
-        </li>
-        <li>
-          <a href={resolve('/relatorios')} class:active={currentPath.startsWith('/relatorios')}>
-            <i class="fa-solid fa-chart-line"></i>
-            <span>Relatórios</span>
           </a>
         </li>
       </ul>
@@ -57,18 +56,30 @@
           <div class="user-avatar">
             <i class="fa-solid fa-user"></i>
           </div>
-          <span class="user-name">Anderson</span>
+          <span class="user-name">{currentUser?.nome}</span>
         </div>
-        <button aria-label="Sair" class="btn-logout" onclick={() => goto(resolve('/logout'))}>
-          <i class="fa-solid fa-right-from-bracket"></i>
-          <span>Sair</span>
-        </button>
+        <form method="POST" action="/logout">
+          <button type="submit" aria-label="Sair" class="btn-logout">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Sair</span>
+          </button>
+        </form>
       </div>
     </div>
   </nav>
 
   <main>
+
+    
     <h1 class="page-title">{title || 'Sem Título'}</h1>
+    {#if showProcessingPayment === true}
+      <ProcessingPayment />
+    {/if}
+
+    {#if justActivatedPlan?.length}
+      <PlanActivationNotice justActivatedPlan={justActivatedPlan} />
+    {/if}
+
     {@render children()}
   </main>
 </div>

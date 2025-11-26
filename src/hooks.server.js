@@ -1,4 +1,5 @@
 import { authService } from "$lib/api/auth";
+import { paymentService } from "$lib/api/payment";
 
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
@@ -10,20 +11,37 @@ export async function handle({ event, resolve }) {
     event.url.pathname.startsWith("/login") ||
     event.url.pathname.startsWith("/cadastro")
   ) {
-    if (session?.user) {
+    if (session?.user && event.request.method === "GET") {
       return new Response(null, {
         status: 302,
         headers: { Location: "/dashboard" },
       });
     }
   }
-
   // Redireciona usuário não autenticado tentando acessar rotas protegidas
   if (event.route.id?.startsWith("/(app)") && !session?.user) {
-    return new Response(null, {
-      status: 302,
-      headers: { Location: "/login" },
-    });
+    if (event.request.method === "GET") {
+      return new Response(null, {
+        status: 302,
+        headers: {
+          Location: `/login?reason=session_expired&timestamp=${Date.now()}`,
+        },
+      });
+    } else {
+      return new Response(null, {
+        status: 401,
+      });
+    }
+  }
+
+  // Read cookie instead of localStorage
+  if (event.route.id?.startsWith("/(app)") && event.request.method === "GET") {
+    const paymentStatus = await paymentService(
+      event.cookies,
+      event.locals.token,
+    ).getPaymentStatus();
+    event.locals.showProcessingPayment = paymentStatus?.showProcessingPayment;
+    event.locals.justActivatedPlan = paymentStatus?.justActivatedPlan;
   }
 
   // Anexa usuário em event.locals se autenticado

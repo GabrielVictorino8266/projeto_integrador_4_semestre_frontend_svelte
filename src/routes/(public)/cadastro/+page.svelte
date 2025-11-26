@@ -1,10 +1,9 @@
 <script>
-  import '$lib/assets/cadastro.css';
-
   import { toastState } from "$lib/stores/toast.svelte.js";
   import { goto } from "$app/navigation";
   import { deserialize } from "$app/forms";
   import { logger } from "$lib/utils/logger";
+  import { resolve } from "$app/paths";
 
   import StepProgress from "$lib/components/StepProgress.svelte";
   import Toaster from "$lib/components/layout/Toaster.svelte";
@@ -156,6 +155,11 @@
         body: formData,
       });
 
+      if (response.redirected) {
+        window.location.href = response.url;
+        return;
+      }
+
       if (response.status !== 200 && response.status !== 409) {
         throw new Error(
           `Request failed: ${response.status} ${response.statusText}`,
@@ -170,9 +174,9 @@
           2000,
         );
         await new Promise((resolve) => setTimeout(resolve, 2000));
-        goto(result.data.redirect);
+        goto(resolve(result.data.redirect));
       } else {
-        toastState.error(result.error.message, 6000);
+        toastState.error(result.data.error, 6000);
       }
     } catch (error) {
       logger.error(error);
@@ -197,6 +201,10 @@
     }
   }
 </script>
+
+<svelte:head>
+    <link rel="stylesheet" href="/cadastro.css">
+</svelte:head>
 
 <Toaster />
 
@@ -375,7 +383,7 @@
       {/if}
 
       <div class="login-link">
-        Já possui uma conta? <a href="/login">Faça login</a>
+        Já possui uma conta? <a href={resolve("/login")}>Faça login</a>
       </div>
     </form>
 
